@@ -11,6 +11,9 @@ import Intake from "@/pages/Intake";
 import Diagnostics from "@/pages/Diagnostics";
 import Risk from "@/pages/Risk";
 import Alerts from "@/pages/Alerts";
+import Reports from "@/pages/Reports";
+import Patients from "@/pages/Patients";
+import Settings from "@/pages/Settings";
 import Explainability from "@/pages/Explainability";
 import NotFound from "@/pages/not-found";
 import { Stethoscope } from "lucide-react";
@@ -23,6 +26,9 @@ function Router() {
       <Route path="/diagnostics" component={Diagnostics} />
       <Route path="/risk" component={Risk} />
       <Route path="/alerts" component={Alerts} />
+      <Route path="/reports" component={Reports} />
+      <Route path="/patients" component={Patients} />
+      <Route path="/settings" component={Settings} />
       <Route path="/explainability" component={Explainability} />
       <Route component={NotFound} />
     </Switch>
