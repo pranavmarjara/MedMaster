@@ -1,0 +1,53 @@
+# Project Title: AI-Powered Diagnostic & Triage Assistant
+
+**Objective:**
+Design and develop an AI-powered diagnostic and triage support system. This system will assist clinicians by synthesizing patient data (history, symptoms, vitals, labs, imaging, etc.) into a clear, explainable, and actionable diagnostic summary. The core challenge is to deliver a fast and reliable tool that enhances, but does not replace, medical judgment.
+
+---
+
+### **Core Features & Deliverables:**
+
+1.  **Intelligent Data Synthesis & Diagnostic Summary:**
+    * Create a user interface where a clinician can input structured and unstructured patient data.
+    * The system should process this data and generate a **Structured Report** as a single, clinician-friendly output.
+
+2.  **Ranked Diagnosis List with Justification:**
+    * Based on the synthesized data, the AI must generate a **Ranked Diagnosis List**.
+    * Each diagnosis should be accompanied by a **confidence level** (e.g., high, medium, low).
+    * Crucially, each diagnosis must be justified by identifying the **underlying evidence** from the patient data.
+
+3.  **Red-Flag & Escalation Alerts:**
+    * The system needs to identify and highlight **urgent conditions** (e.g., sepsis, stroke) that require immediate action.
+    * These **Red-Flag Alerts** should be highly visible and include clear instructions on escalation urgency.
+
+4.  **Risk Stratification:**
+    * Categorize the patient's condition into **Risk Stratification** levels (Low/Medium/High).
+    * Provide a brief, clear explanation for the assigned risk category, identifying the **key drivers** from the data.
+
+5.  **Explainability Pack:**
+    * Implement an **Explainability Pack** to build trust and provide transparency.
+    * This feature will show a transparent mapping of the AI's outputs to the specific patient data points that influenced the result.
+    * The goal is to make every output traceable and auditable.
+
+6.  **Validation & Documentation:**
+    * Include a section for **Validation Notes** within the project documentation. This should outline how the system would be reviewed by clinicians and tested for robustness.
+
+---
+
+### **Technical & Design Requirements:**
+
+* **Technology Stack:** Use a modern web framework like Flask (Python), React/Next.js (JavaScript), or Streamlit to create a professional and responsive user interface.
+* **Aesthetics & Usability:** The design should be clean, intuitive, and professional, mimicking a real clinical dashboard. Use a dark or light theme with a clear layout. The user experience should prioritize speed and clarity.
+* **Data Handling:** Use a simple, in-memory data structure or a lightweight database like Replit DB to manage sample patient data. Do not use real patient data for this prototype. The system must be able to handle a mock dataset from a provided link (simulate access).
+* **Code Quality:** Write clean, well-commented code. Ensure the project is structured logically with separate files for front-end, back-end, and AI logic.
+* **Competition Readiness:** The final product should be deployable and runnable on Replit with a clear `README.md` file that explains the project's features, how to run it, and the design decisions.
+
+---
+
+**Task:**
+
+* **Step 1:** Scaffold the project with a basic UI (HTML/CSS/JS) and a back-end framework.
+* **Step 2:** Implement the data input and a mock data processing function.
+* **Step 3:** Build out the core features listed above, focusing on logic for a single, comprehensive patient case to demonstrate all deliverables.
+* **Step 4:** Refine the UI for an attractive and professional look, using visual elements like cards, color-coded alerts, and clear headings.
+* **Step 5:** Write the project's `README.md` file, detailing the problem statement, solution, features, and future scope.
