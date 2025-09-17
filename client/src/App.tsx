@@ -15,6 +15,7 @@ import Reports from "@/pages/Reports";
 import Patients from "@/pages/Patients";
 import Settings from "@/pages/Settings";
 import Explainability from "@/pages/Explainability";
+import MultiAI from "@/pages/MultiAI";
 import NotFound from "@/pages/not-found";
 import { Stethoscope } from "lucide-react";
 
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/patients" component={Patients} />
       <Route path="/settings" component={Settings} />
       <Route path="/explainability" component={Explainability} />
+      <Route path="/multi-ai" component={MultiAI} />
       <Route component={NotFound} />
     </Switch>
   );

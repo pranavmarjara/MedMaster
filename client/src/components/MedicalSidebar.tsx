@@ -6,7 +6,8 @@ import {
   Brain, 
   FileText,
   Users,
-  Settings 
+  Settings,
+  Bot 
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import {
@@ -50,6 +51,11 @@ const menuItems = [
     title: "Reports",
     url: "/reports",
     icon: FileText,
+  },
+  {
+    title: "Multi AI Diagnostic",
+    url: "/multi-ai",
+    icon: Bot,
   },
 ];
 
