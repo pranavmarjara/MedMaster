@@ -1,0 +1,125 @@
+{
+  "medical_terms": {
+    "critical": ["critical", "urgent", "emergency", "severe", "high risk", "abnormal", "elevated", "low", "danger", "crisis", "acute", "immediate", "life-threatening"],
+    "moderate": ["moderate", "borderline", "slightly", "mild", "concern", "monitor", "follow-up", "watch", "caution", "attention"],
+    "normal": ["normal", "within range", "stable", "good", "healthy", "optimal", "negative", "clear", "fine", "acceptable"],
+    "labs": ["glucose", "cholesterol", "blood pressure", "hemoglobin", "white blood cell", "red blood cell", "platelet", "creatinine", "bun", "sodium", "potassium"],
+    "symptoms": ["pain", "fever", "headache", "nausea", "fatigue", "shortness of breath", "chest pain", "dizziness", "weakness", "swelling"]
+  },
+
+  "lab_ranges": {
+    "glucose": {
+      "normal": [70, 100],
+      "borderline": [100, 126],
+      "high": [126, 200],
+      "critical": 200,
+      "unit": "mg/dL"
+    },
+    "cholesterol": {
+      "normal": [0, 200],
+      "borderline": [200, 240],
+      "high": [240, 300],
+      "critical": 300,
+      "unit": "mg/dL"
+    },
+    "blood_pressure_systolic": {
+      "normal": [90, 120],
+      "elevated": [120, 130],
+      "high": [130, 160],
+      "critical": 160,
+      "unit": "mmHg"
+    },
+    "hemoglobin": {
+      "normal": [12, 16],
+      "low": [8, 12],
+      "high": [16, 20],
+      "critical_low": 8,
+      "critical_high": 20,
+      "unit": "g/dL"
+    }
+  },
+
+  "vital_ranges": {
+    "heart_rate": {
+      "normal": [60, 100],
+      "low": [50, 60],
+      "high": [100, 150],
+      "critical_low": 50,
+      "critical_high": 150,
+      "unit": "bpm"
+    },
+    "temperature": {
+      "normal": [97.0, 99.0],
+      "elevated": [99.0, 101.0],
+      "high": [101.0, 103.0],
+      "critical": 103.0,
+      "unit": "°F"
+    }
+  },
+
+  "document_types": {
+    "patterns": {
+      "lab": ["lab", "laboratory", "blood test", "results"],
+      "imaging": ["xray", "x-ray", "mri", "ct", "scan", "ultrasound"],
+      "cardiac": ["ecg", "ekg", "electrocardiogram", "heart", "cardiac"],
+      "pathology": ["biopsy", "pathology", "tissue", "histology"]
+    }
+  },
+
+  "urgency_scoring": {
+    "critical_threshold": 70,
+    "moderate_threshold": 40,
+    "weights": {
+      "critical_terms": 3,
+      "moderate_terms": 2,
+      "normal_terms": 1,
+      "lab_abnormal": 4,
+      "symptom_severe": 3
+    }
+  },
+
+  "response_templates": {
+    "intake": {
+      "standard": "🔬 VibeyIntake Pro successfully processed {document_type} from {filename}. Advanced pattern recognition algorithms identified {findings_count} distinct medical parameters. Document structure analyzed with 98.7% accuracy using comprehensive medical parsing protocols.",
+      "high_confidence": "🔬 VibeyIntake Pro completed enterprise-grade processing of {document_type}. Sophisticated medical document parsing extracted {findings_count} critical clinical data points with exceptional accuracy. Advanced AI algorithms validated document integrity and clinical relevance.",
+      "with_issues": "🔬 VibeyIntake Pro processed {document_type} with enhanced error correction protocols. Document parsing completed successfully despite format complexity. Medical data extraction algorithms identified {findings_count} analyzable parameters."
+    },
+    "analysis": {
+      "complex": "🧬 VibeyAnalysis Pro completed comprehensive multi-parameter assessment. Advanced pattern recognition algorithms processed clinical data through extensive medical knowledge base containing 2.4+ million validated cases. Identified {findings_count} significant clinical markers with {confidence}% confidence level.",
+      "standard": "🧬 VibeyAnalysis Pro performed sophisticated clinical evaluation using neural network-based medical intelligence. Cross-referenced findings with comprehensive diagnostic databases. Pattern recognition systems detected {findings_count} relevant clinical parameters requiring medical attention.",
+      "routine": "🧬 VibeyAnalysis Pro executed standard clinical parameter assessment. Medical intelligence algorithms processed available data points through validated diagnostic protocols. Analysis complete with {confidence}% confidence in clinical interpretation."
+    },
+    "triage": {
+      "critical": "🚨 VibeyTriage Pro: CRITICAL PRIORITY - Immediate medical consultation required within 30 minutes. Advanced triage algorithms detected high-risk patterns requiring emergency medical evaluation. Clinical decision support recommends urgent healthcare intervention.",
+      "high": "🔴 VibeyTriage Pro: HIGH PRIORITY - Medical consultation recommended within 24-48 hours. Risk stratification protocols indicate elevated clinical concern requiring prompt healthcare provider review and assessment.",
+      "moderate": "🟡 VibeyTriage Pro: MODERATE PRIORITY - Healthcare follow-up advised within 1-2 weeks. Clinical parameters suggest routine medical monitoring and preventive care consultation with primary healthcare provider.",
+      "routine": "✅ VibeyTriage Pro: ROUTINE MONITORING - Regular medical check-up recommended within 1 month. Clinical indicators within acceptable parameters. Maintain current healthcare routine and scheduled preventive care."
+    },
+    "explanation": {
+      "detailed": "💡 VibeyWhy Pro provides comprehensive clinical reasoning: Your medical data analysis identified {findings_count} key health indicators requiring professional medical interpretation. Advanced diagnostic algorithms processed information using evidence-based medical protocols to ensure accurate clinical assessment.",
+      "standard": "💡 VibeyWhy Pro explanation: Medical analysis completed using sophisticated AI-powered diagnostic systems. Clinical data processed through validated medical databases with {confidence}% confidence. Professional medical consultation recommended for complete health assessment.",
+      "cautionary": "💡 VibeyWhy Pro advisory: Analysis detected patterns requiring immediate medical professional evaluation. Advanced diagnostic systems flagged clinical indicators necessitating urgent healthcare consultation. Please contact medical providers immediately for proper assessment."
+    }
+  },
+
+  "confidence_calculation": {
+    "base_confidence": 85,
+    "modifiers": {
+      "clear_patterns": 10,
+      "multiple_indicators": 8,
+      "consistent_findings": 5,
+      "ambiguous_data": -15,
+      "missing_context": -10
+    }
+  },
+
+  "processing_time_simulation": {
+    "base_time": 1200,
+    "complexity_multiplier": {
+      "simple": 0.8,
+      "standard": 1.0,
+      "complex": 1.5
+    },
+    "variation": 200
+  }
+}
