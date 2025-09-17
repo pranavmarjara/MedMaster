@@ -144,63 +144,15 @@ export default function VibeyDiagnostic() {
       const formData = new FormData();
       formData.append('file', file);
 
-      // Step 1: VibeyIntake processing
-      updateBotStatus("intake", "processing", 20, "Reading and extracting data from your medical report...");
-      
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate processing time
-      
-      updateBotStatus("intake", "processing", 60, "Converting data to structured format...");
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      updateBotStatus("intake", "processing", 90, "Validating extracted medical data...");
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      updateBotStatus("intake", "completed", 100, "Successfully processed medical report!");
+      // Start all bots processing immediately
+      setBots(prev => prev.map(bot => ({
+        ...bot,
+        status: "processing",
+        progress: 50,
+        message: "Analyzing your medical document..."
+      })));
 
-      // Step 2: VibeyAnalysis processing
-      updateBotStatus("analysis", "processing", 15, "Analyzing medical indicators and patterns...");
-      
-      await new Promise(resolve => setTimeout(resolve, 2500));
-      
-      updateBotStatus("analysis", "processing", 45, "Cross-referencing with medical databases...");
-      
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      updateBotStatus("analysis", "processing", 75, "Identifying key medical findings...");
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      updateBotStatus("analysis", "completed", 100, "Medical analysis completed successfully!");
-
-      // Step 3: VibeyTriage processing  
-      updateBotStatus("triage", "processing", 25, "Assessing urgency and priority levels...");
-      
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      updateBotStatus("triage", "processing", 60, "Generating triage recommendations...");
-      
-      await new Promise(resolve => setTimeout(resolve, 1800));
-      
-      updateBotStatus("triage", "processing", 85, "Finalizing triage classification...");
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      updateBotStatus("triage", "completed", 100, "Triage assessment completed!");
-
-      // Step 4: VibeyWhy processing
-      updateBotStatus("why", "processing", 30, "Analyzing diagnostic reasoning...");
-      
-      await new Promise(resolve => setTimeout(resolve, 2200));
-      
-      updateBotStatus("why", "processing", 70, "Preparing comprehensive explanation...");
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      updateBotStatus("why", "completed", 100, "Explanation ready!");
-
-      // Now call the VibeyBot analysis engine
+      // Call the analysis API directly
       const response = await fetch('/api/analyze-medical-report', {
         method: 'POST',
         body: formData,
@@ -209,25 +161,24 @@ export default function VibeyDiagnostic() {
       const result = await response.json();
       
       if (!response.ok) {
-        // Even on error, server provides fallback analysis results
-        // Display them but also mark bots as having errors
         setAnalysisResult(result);
-        setErrorAlert("Analysis completed with technical limitations. Results may be partial - please consult medical professionals for complete assessment.");
+        setErrorAlert("Analysis completed with limitations. Please consult medical professionals for complete assessment.");
         setBots(prev => prev.map(bot => ({
           ...bot,
           status: "error",
-          message: "Analysis completed with limitations - results may be partial"
+          message: "Analysis completed with limitations"
         })));
-        
-        // Refresh data even for fallback results since they may be saved to database
-        queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
-        queryClient.invalidateQueries({ queryKey: ['diagnostic-history'] });
-        return;
+      } else {
+        setAnalysisResult(result);
+        setBots(prev => prev.map(bot => ({
+          ...bot,
+          status: "completed",
+          progress: 100,
+          message: "Analysis completed successfully!"
+        })));
       }
-
-      setAnalysisResult(result);
       
-      // Immediately refresh dashboard and diagnostic history data
+      // Refresh data
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
       queryClient.invalidateQueries({ queryKey: ['diagnostic-history'] });
 
@@ -285,14 +236,13 @@ export default function VibeyDiagnostic() {
     <div className="min-h-full p-6 space-y-8">
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3 mb-6">
-          <Bot className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-            🤖 VibeyBot Advanced Diagnostic
+          <Brain className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-bold text-primary">
+            Medical Diagnostic Analysis
           </h1>
         </div>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          🏥 Upload your medical reports and watch our specialized VibeyBot AI agents collaborate to provide 
-          <span className="text-primary font-semibold">enterprise-grade medical analysis</span> with 94.2% accuracy
+          Upload your medical reports and get comprehensive AI-powered analysis
         </p>
       </div>
 
@@ -371,8 +321,8 @@ export default function VibeyDiagnostic() {
       {/* VibeyBots Workflow */}
       {file && (
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent">
-            🧠 VibeyBot AI Medical Analysis Pipeline
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            Analysis Progress
           </h2>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {bots.map((bot, index) => (
@@ -448,8 +398,8 @@ export default function VibeyDiagnostic() {
             exit={{ opacity: 0, y: -20 }}
             className="max-w-4xl mx-auto space-y-6"
           >
-            <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-              ✅ VibeyBot Analysis Complete - Enterprise Results
+            <h2 className="text-2xl font-bold text-center mb-6">
+              Your Diagnostic Results
             </h2>
             
             <div className="grid gap-6 md:grid-cols-2">
