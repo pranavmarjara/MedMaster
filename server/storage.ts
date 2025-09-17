@@ -12,6 +12,7 @@ export interface IStorage {
   getUserWithPasswordByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<SafeUser>;
   verifyPassword(plainPassword: string, hashedPassword: string): Promise<boolean>;
+  clearAllData(): Promise<void>;
 }
 
 // Database storage implementation - replaces MemStorage for persistence
@@ -58,6 +59,14 @@ export class DatabaseStorage implements IStorage {
 
   async verifyPassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(plainPassword, hashedPassword);
+  }
+
+  async clearAllData(): Promise<void> {
+    // Clear all medical analyses
+    await db.delete(users);
+    // Import medicalAnalyses from schema to clear that table too
+    const { medicalAnalyses } = await import("@shared/schema");
+    await db.delete(medicalAnalyses);
   }
 }
 
