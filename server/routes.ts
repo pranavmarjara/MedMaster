@@ -6,16 +6,36 @@ import fs from "fs";
 import { storage } from "./storage";
 import { analyzeMedicalReport, analyzeImageReport } from "./gemini";
 
-// Dynamic import for pdf-parse to avoid startup issues
-async function parsePdf(buffer: Buffer): Promise<string> {
-  try {
-    const pdfParse = (await import("pdf-parse")).default;
-    const data = await pdfParse(buffer);
-    return data.text;
-  } catch (error) {
-    console.error('PDF parsing error:', error);
-    throw error;
-  }
+// Simple PDF text extraction fallback
+function extractTextFromPdf(buffer: Buffer): string {
+  // Convert buffer to string and try to extract readable text
+  // This is a basic approach - for production, consider using a proper PDF parser
+  const text = buffer.toString('binary');
+  
+  // Look for text patterns in PDF structure
+  const textMatches = text.match(/\(([^)]+)\)/g) || [];
+  const streamMatches = text.match(/stream\s*(.*?)\s*endstream/gs) || [];
+  
+  let extractedText = '';
+  
+  // Extract text from parentheses (common PDF text encoding)
+  textMatches.forEach(match => {
+    const cleanText = match.slice(1, -1).replace(/[^\x20-\x7E]/g, ' ').trim();
+    if (cleanText.length > 3) {
+      extractedText += cleanText + ' ';
+    }
+  });
+  
+  // Try to extract from streams
+  streamMatches.forEach(match => {
+    const streamContent = match.replace(/^stream\s*/, '').replace(/\s*endstream$/, '');
+    const readable = streamContent.replace(/[^\x20-\x7E\n\r]/g, ' ').trim();
+    if (readable.length > 10) {
+      extractedText += readable + ' ';
+    }
+  });
+  
+  return extractedText.trim();
 }
 
 // Configure multer for file uploads
@@ -91,11 +111,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Extract text from PDF
           try {
             const dataBuffer = fs.readFileSync(filePath);
-            fileContent = await parsePdf(dataBuffer);
-            console.log(`Extracted ${fileContent.length} characters from PDF: ${originalName}`);
+            fileContent = extractTextFromPdf(dataBuffer);
+            
+            if (fileContent.length < 50) {
+              fileContent = `Medical PDF document: ${originalName} - Limited text could be extracted. For best results, please convert to plain text format or provide as an image for visual analysis.`;
+            } else {
+              console.log(`Extracted ${fileContent.length} characters from PDF: ${originalName}`);
+            }
           } catch (pdfError) {
             console.error('Error extracting PDF content:', pdfError);
-            fileContent = `Medical PDF document: ${originalName} - text extraction failed. Please ensure the PDF contains extractable text.`;
+            fileContent = `Medical PDF document: ${originalName} - Text extraction encountered issues. Please convert to plain text format or provide as an image for analysis.`;
           }
         } else if (mimeType.includes('word') || mimeType.includes('msword') || mimeType.includes('officedocument')) {
           // For Word documents, try to read as text (basic approach)
