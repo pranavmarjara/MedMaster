@@ -8,36 +8,71 @@ import { analyzeMedicalReport, analyzeImageReport } from "./vibey-engine";
 import { db } from "./db";
 import { medicalAnalyses } from "@shared/schema";
 
-// Simple PDF text extraction fallback
+// Enhanced medical PDF text extraction
 function extractTextFromPdf(buffer: Buffer): string {
-  // Convert buffer to string and try to extract readable text
-  // This is a basic approach - for production, consider using a proper PDF parser
   const text = buffer.toString('binary');
   
-  // Look for text patterns in PDF structure
+  // Multiple extraction strategies for medical reports
   const textMatches = text.match(/\(([^)]+)\)/g) || [];
   const streamMatches = text.match(/stream\s*(.*?)\s*endstream/g) || [];
   
   let extractedText = '';
+  const medicalKeywords = [
+    'hemoglobin', 'wbc', 'rbc', 'cholesterol', 'glucose', 'blood', 'sugar',
+    'platelet', 'hematocrit', 'patient', 'result', 'reference', 'normal',
+    'high', 'low', 'mg/dl', 'g/dl', '/cmm', 'bpm', 'mmhg', 'interpretation'
+  ];
   
-  // Extract text from parentheses (common PDF text encoding)
+  // Extract text from parentheses with medical context prioritization
   textMatches.forEach(match => {
     const cleanText = match.slice(1, -1).replace(/[^\x20-\x7E]/g, ' ').trim();
-    if (cleanText.length > 3) {
-      extractedText += cleanText + ' ';
+    if (cleanText.length > 2) {
+      // Prioritize medical terms and numerical values
+      const hasMedicalContent = medicalKeywords.some(keyword => 
+        cleanText.toLowerCase().includes(keyword)
+      ) || /\d+\.?\d*\s*(mg\/dl|g\/dl|\/cmm|mmhg|bpm|%)/.test(cleanText.toLowerCase());
+      
+      if (hasMedicalContent || cleanText.length > 10) {
+        extractedText += cleanText + ' ';
+      }
     }
   });
   
-  // Try to extract from streams
+  // Enhanced stream processing for structured data
   streamMatches.forEach(match => {
     const streamContent = match.replace(/^stream\s*/, '').replace(/\s*endstream$/, '');
     const readable = streamContent.replace(/[^\x20-\x7E\n\r]/g, ' ').trim();
-    if (readable.length > 10) {
+    if (readable.length > 5) {
       extractedText += readable + ' ';
     }
   });
   
-  return extractedText.trim();
+  // Try alternative extraction - look for consecutive readable text blocks
+  const readableBlocks = text.match(/[a-zA-Z0-9\s\.\-\(\)\/,:;]{20,}/g) || [];
+  readableBlocks.forEach(block => {
+    const cleaned = block.replace(/[^\x20-\x7E\n\r]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (cleaned.length > 15 && /[a-zA-Z]/.test(cleaned)) {
+      extractedText += cleaned + ' ';
+    }
+  });
+  
+  // Clean up and structure the extracted text
+  let finalText = extractedText.replace(/\s+/g, ' ').trim();
+  
+  // If we didn't get much text, try a more aggressive approach
+  if (finalText.length < 100) {
+    const aggressiveExtract = text.replace(/[^\x20-\x7E\n\r]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .split(' ')
+      .filter(word => word.length > 2)
+      .join(' ');
+    
+    if (aggressiveExtract.length > finalText.length) {
+      finalText = aggressiveExtract;
+    }
+  }
+  
+  return finalText;
 }
 
 // Configure multer for file uploads

@@ -213,29 +213,158 @@ class VibeyMedicalIntelligence {
     return Math.abs(seed % 1000);
   }
 
-  private extractClinicalPatterns(content: string): string[] {
-    const patterns: string[] = [];
+  private extractClinicalPatterns(content: string): any[] {
+    const patterns: any[] = [];
     const contentLower = content.toLowerCase();
     
-    // Extract numerical biomarkers using pattern recognition
-    const biomarkerPattern = /(\d+\.?\d*)\s*(mg\/dl|mmol\/l|units|%|bpm|mmhg)/gi;
-    const matches = content.match(biomarkerPattern);
-    if (matches) patterns.push(...matches.slice(0, 5));
+    // Enhanced pattern extraction for specific medical values
+    const labPatterns = [
+      // Blood glucose patterns
+      { regex: /(?:glucose|blood\s*sugar|random\s*blood\s*sugar|rbs)[\s\w:]*?(\d+\.?\d*)\s*mg\/dl/gi, 
+        type: 'glucose', unit: 'mg/dL', normalRange: '70-140' },
+      
+      // WBC patterns
+      { regex: /(?:wbc|white\s*blood\s*cell|total\s*wbc)[\s\w:]*?(\d+\.?\d*)\s*(?:\/cmm|per\s*cmm|\/mm3)/gi,
+        type: 'wbc_count', unit: '/cmm', normalRange: '4000-10000' },
+      
+      // Hemoglobin patterns  
+      { regex: /(?:hemoglobin|hb|hgb)[\s\w:]*?(\d+\.?\d*)\s*g\/dl/gi,
+        type: 'hemoglobin', unit: 'g/dL', normalRange: '13.0-16.5 (M), 12.0-15.5 (F)' },
+      
+      // Cholesterol patterns
+      { regex: /(?:cholesterol|total\s*cholesterol)[\s\w:]*?(\d+\.?\d*)\s*mg\/dl/gi,
+        type: 'cholesterol', unit: 'mg/dL', normalRange: '<200' },
+      
+      // Blood pressure patterns
+      { regex: /(?:blood\s*pressure|bp)[\s\w:]*?(\d+)\/(\d+)\s*mmhg/gi,
+        type: 'blood_pressure', unit: 'mmHg', normalRange: '<120/80' },
+      
+      // Heart rate patterns
+      { regex: /(?:heart\s*rate|pulse|hr)[\s\w:]*?(\d+)\s*(?:bpm|beats)/gi,
+        type: 'heart_rate', unit: 'bpm', normalRange: '60-100' }
+    ];
 
-    // Cross-reference with Vibey medical knowledge base
-    this.ruleEngine.medical_terms.labs.forEach(lab => {
-      if (contentLower.includes(lab)) {
-        patterns.push(`${lab} levels detected`);
+    // Extract specific lab values and flag abnormalities
+    labPatterns.forEach(pattern => {
+      let match;
+      while ((match = pattern.regex.exec(content)) !== null) {
+        const value = parseFloat(match[1]);
+        const secondValue = match[2] ? parseFloat(match[2]) : null;
+        
+        let isAbnormal = false;
+        let severity = 'normal';
+        let finding = '';
+
+        // Analyze specific values against ranges
+        switch (pattern.type) {
+          case 'glucose':
+            if (value > 200) {
+              isAbnormal = true;
+              severity = 'critical';
+              finding = `🚨 DIABETES RANGE: Blood glucose ${value} mg/dL is severely elevated (normal: 70-140). Immediate medical attention required.`;
+            } else if (value > 140) {
+              isAbnormal = true;
+              severity = 'high';
+              finding = `⚠️ HIGH: Blood glucose ${value} mg/dL above normal range (70-140). Diabetes screening recommended.`;
+            } else if (value < 70) {
+              isAbnormal = true;
+              severity = 'critical';
+              finding = `🚨 LOW: Blood glucose ${value} mg/dL dangerously low (normal: 70-140). Risk of hypoglycemia.`;
+            } else {
+              finding = `✅ NORMAL: Blood glucose ${value} mg/dL within normal range (70-140).`;
+            }
+            break;
+
+          case 'wbc_count':
+            if (value > 10000) {
+              isAbnormal = true;
+              severity = 'high';
+              finding = `⚠️ ELEVATED: WBC count ${value.toLocaleString()}/cmm above normal range (4,000-10,000). Possible infection or inflammation.`;
+            } else if (value < 4000) {
+              isAbnormal = true;
+              severity = 'high';
+              finding = `⚠️ LOW: WBC count ${value.toLocaleString()}/cmm below normal range (4,000-10,000). Immune system may be compromised.`;
+            } else {
+              finding = `✅ NORMAL: WBC count ${value.toLocaleString()}/cmm within normal range (4,000-10,000).`;
+            }
+            break;
+
+          case 'hemoglobin':
+            if (value < 12) {
+              isAbnormal = true;
+              severity = 'high';
+              finding = `⚠️ ANEMIA: Hemoglobin ${value} g/dL indicates anemia (normal: 13.0-16.5 M, 12.0-15.5 F).`;
+            } else if (value > 17) {
+              isAbnormal = true;
+              severity = 'moderate';
+              finding = `⚠️ ELEVATED: Hemoglobin ${value} g/dL above normal range. Further evaluation needed.`;
+            } else {
+              finding = `✅ NORMAL: Hemoglobin ${value} g/dL within normal range.`;
+            }
+            break;
+
+          case 'cholesterol':
+            if (value > 240) {
+              isAbnormal = true;
+              severity = 'high';
+              finding = `⚠️ HIGH CHOLESTEROL: Total cholesterol ${value} mg/dL elevated (desirable: <200). Cardiovascular risk increased.`;
+            } else if (value > 200) {
+              isAbnormal = true;
+              severity = 'moderate';
+              finding = `⚠️ BORDERLINE HIGH: Cholesterol ${value} mg/dL borderline high (desirable: <200). Lifestyle changes recommended.`;
+            } else {
+              finding = `✅ GOOD: Cholesterol ${value} mg/dL within desirable range (<200).`;
+            }
+            break;
+        }
+
+        patterns.push({
+          type: pattern.type,
+          value: value,
+          secondValue: secondValue,
+          unit: pattern.unit,
+          isAbnormal: isAbnormal,
+          severity: severity,
+          finding: finding,
+          normalRange: pattern.normalRange
+        });
       }
     });
 
-    this.ruleEngine.medical_terms.symptoms.forEach(symptom => {
-      if (contentLower.includes(symptom)) {
-        patterns.push(`${symptom} indicators found`);
+    // Look for critical keywords that need immediate attention
+    const criticalFindings: any[] = [];
+    this.ruleEngine.medical_terms.critical.forEach(term => {
+      if (contentLower.includes(term.toLowerCase())) {
+        criticalFindings.push({
+          type: 'critical_symptom',
+          finding: `🚨 CRITICAL: "${term}" detected - requires immediate medical evaluation`,
+          severity: 'critical',
+          isAbnormal: true
+        });
       }
     });
 
-    return patterns.slice(0, 8);
+    patterns.push(...criticalFindings);
+
+    // Extract patient demographics for context
+    const ageMatch = content.match(/(?:age|years?)[\s\w:\/]*?(\d+)\s*(?:y|years?|yr)/i);
+    const genderMatch = content.match(/(?:sex|gender)[\s\w:\/]*?(male|female|m|f)/i);
+    if (ageMatch) {
+      patterns.push({
+        type: 'demographics',
+        finding: `Patient Age: ${ageMatch[1]} years`,
+        value: parseInt(ageMatch[1])
+      });
+    }
+    if (genderMatch) {
+      patterns.push({
+        type: 'demographics', 
+        finding: `Patient Gender: ${genderMatch[1]}`,
+        value: genderMatch[1].toLowerCase()
+      });
+    }
+
+    return patterns;
   }
 
   private classifyDocumentType(fileName: string, content: string): string {
@@ -300,28 +429,93 @@ class VibeyMedicalIntelligence {
     };
   }
 
-  private synthesizeResponses(fileName: string, documentType: string, patterns: string[], riskScore: number, confidence: number): Pick<VibeyAnalysisResponse, 'intake' | 'analysis' | 'triage' | 'explanation'> {
+  private synthesizeResponses(fileName: string, documentType: string, patterns: any[], riskScore: number, confidence: number): Pick<VibeyAnalysisResponse, 'intake' | 'analysis' | 'triage' | 'explanation'> {
     const patternsCount = patterns.length;
     const confidencePercent = Math.round(confidence * 100);
     
-    // Select response templates based on Vibey assessment algorithms
-    const responses = this.selectResponseVariations(riskScore, patterns.length);
+    // Extract patient info and key findings
+    const demographicsInfo = patterns.filter(p => p.type === 'demographics');
+    const abnormalFindings = patterns.filter(p => p.isAbnormal);
+    const criticalFindings = abnormalFindings.filter(p => p.severity === 'critical');
+    const highFindings = abnormalFindings.filter(p => p.severity === 'high');
+    const normalFindings = patterns.filter(p => p.severity === 'normal');
+
+    // Generate specific intake summary
+    let patientInfo = '';
+    demographicsInfo.forEach(demo => {
+      patientInfo += demo.finding + '. ';
+    });
+
+    const intake = `📋 VibeyBot Document Analysis Complete: ${fileName} processed successfully. ${patientInfo}${patternsCount} clinical parameters analyzed. ${abnormalFindings.length} abnormal findings detected requiring attention.`;
+
+    // Generate detailed clinical analysis
+    let clinicalAnalysis = `🔬 VibeyBot Clinical Analysis Results:\n\n`;
     
+    if (criticalFindings.length > 0) {
+      clinicalAnalysis += `🚨 CRITICAL FINDINGS (${criticalFindings.length}):\n`;
+      criticalFindings.forEach(finding => {
+        clinicalAnalysis += `• ${finding.finding}\n`;
+      });
+      clinicalAnalysis += `\n`;
+    }
+    
+    if (highFindings.length > 0) {
+      clinicalAnalysis += `⚠️ ABNORMAL FINDINGS (${highFindings.length}):\n`;
+      highFindings.forEach(finding => {
+        clinicalAnalysis += `• ${finding.finding}\n`;
+      });
+      clinicalAnalysis += `\n`;
+    }
+    
+    if (normalFindings.length > 0) {
+      clinicalAnalysis += `✅ NORMAL FINDINGS (${normalFindings.length}):\n`;
+      normalFindings.slice(0, 3).forEach(finding => { // Show first 3 normal findings
+        clinicalAnalysis += `• ${finding.finding}\n`;
+      });
+      if (normalFindings.length > 3) {
+        clinicalAnalysis += `• ... and ${normalFindings.length - 3} other normal parameters\n`;
+      }
+    }
+
+    // Generate specific triage recommendation
+    let triageLevel = '';
+    let triageMessage = '';
+    
+    if (criticalFindings.length > 0) {
+      triageLevel = '🚨 URGENT';
+      triageMessage = `${triageLevel} - Immediate medical attention required. Critical findings detected that need urgent evaluation by healthcare provider.`;
+    } else if (highFindings.length > 0) {
+      triageLevel = '⚠️ HIGH PRIORITY';
+      triageMessage = `${triageLevel} - Medical consultation recommended within 24-48 hours. Abnormal findings require professional assessment.`;
+    } else if (patterns.some(p => p.severity === 'moderate')) {
+      triageLevel = '📋 ROUTINE';
+      triageMessage = `${triageLevel} - Schedule routine follow-up with healthcare provider. Some borderline findings warrant monitoring.`;
+    } else {
+      triageLevel = '✅ ROUTINE';
+      triageMessage = `${triageLevel} - Results appear within normal ranges. Maintain regular health monitoring schedule.`;
+    }
+
+    // Generate detailed explanation
+    let explanation = `💡 VibeyBot Medical Explanation:\n\n`;
+    explanation += `Your medical document has been analyzed using advanced medical intelligence protocols. `;
+    
+    if (abnormalFindings.length > 0) {
+      explanation += `Key concerns identified:\n\n`;
+      abnormalFindings.slice(0, 3).forEach(finding => {
+        explanation += `• ${finding.type.replace('_', ' ').toUpperCase()}: ${finding.finding}\n`;
+      });
+      explanation += `\nThese findings indicate medical parameters outside normal ranges that require professional medical evaluation and potential treatment.`;
+    } else {
+      explanation += `Analysis shows medical parameters within expected normal ranges. Continue current health maintenance practices and regular monitoring.`;
+    }
+    
+    explanation += ` Always consult with qualified healthcare professionals for comprehensive medical interpretation and treatment decisions.`;
+
     return {
-      intake: this.personalizeTemplate(responses.intake, {
-        document_type: documentType,
-        filename: fileName,
-        findings_count: patternsCount.toString()
-      }),
-      analysis: this.personalizeTemplate(responses.analysis, {
-        findings_count: patternsCount.toString(),
-        confidence: confidencePercent.toString()
-      }),
-      triage: responses.triage,
-      explanation: this.personalizeTemplate(responses.explanation, {
-        findings_count: patternsCount.toString(),
-        confidence: confidencePercent.toString()
-      })
+      intake: intake,
+      analysis: clinicalAnalysis,
+      triage: triageMessage,
+      explanation: explanation
     };
   }
 
