@@ -1,0 +1,164 @@
+{
+  "vitals": {
+    "blood_glucose": {
+      "low": {
+        "threshold": "< 70",
+        "responses": [
+          "Blood sugar is critically low — possible hypoglycemia.",
+          "Detected hypoglycemia, urgent correction may be required."
+        ],
+        "confidence_range": [75, 95]
+      },
+      "high": {
+        "threshold": "> 180",
+        "responses": [
+          "Elevated blood sugar detected — possible diabetes risk.",
+          "Hyperglycemia noted, further testing recommended."
+        ],
+        "confidence_range": [80, 95]
+      }
+    },
+    "blood_pressure": {
+      "hypertension": {
+        "threshold": "≥ 140/90",
+        "responses": [
+          "Blood pressure is elevated — possible hypertension.",
+          "Detected high BP, may indicate cardiovascular strain."
+        ],
+        "confidence_range": [70, 90]
+      },
+      "hypotension": {
+        "threshold": "< 90/60",
+        "responses": [
+          "Blood pressure is abnormally low — possible shock risk.",
+          "Low BP detected, monitor for dizziness or fainting."
+        ],
+        "confidence_range": [70, 85]
+      }
+    },
+    "heart_rate": {
+      "tachycardia": {
+        "threshold": "> 100",
+        "responses": [
+          "Heart rate elevated — possible tachycardia.",
+          "Fast pulse detected, could indicate stress or cardiac issue."
+        ],
+        "confidence_range": [70, 90]
+      },
+      "bradycardia": {
+        "threshold": "< 60",
+        "responses": [
+          "Heart rate is low — possible bradycardia.",
+          "Slow pulse detected, clinical correlation needed."
+        ],
+        "confidence_range": [70, 90]
+      }
+    }
+  },
+
+  "labs": {
+    "cholesterol": {
+      "high": {
+        "threshold": "> 240",
+        "responses": [
+          "Cholesterol is high — cardiovascular risk elevated.",
+          "Hypercholesterolemia detected, lifestyle changes advised."
+        ],
+        "confidence_range": [80, 95]
+      }
+    },
+    "thyroid": {
+      "low_tsh": {
+        "threshold": "< 0.4",
+        "responses": [
+          "TSH low — possible hyperthyroidism.",
+          "Detected suppressed TSH, may indicate thyroid overactivity."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "high_tsh": {
+        "threshold": "> 4.0",
+        "responses": [
+          "TSH high — possible hypothyroidism.",
+          "Elevated TSH noted, further thyroid workup suggested."
+        ],
+        "confidence_range": [75, 90]
+      }
+    }
+  },
+
+  "combo_rules": [
+    {
+      "conditions": ["blood_glucose.high", "blood_pressure.hypertension"],
+      "responses": [
+        "Combination of high glucose and high BP — metabolic syndrome risk.",
+        "Detected both hypertension and hyperglycemia, cardiovascular risk elevated."
+      ],
+      "confidence_range": [80, 95]
+    },
+    {
+      "conditions": ["cholesterol.high", "blood_pressure.hypertension"],
+      "responses": [
+        "High cholesterol plus hypertension — strong cardiovascular disease risk.",
+        "Detected combined lipid and BP abnormality, monitor heart health closely."
+      ],
+      "confidence_range": [80, 95]
+    }
+  ],
+
+  "red_flags": {
+    "chest_pain": {
+      "keywords": ["chest pain", "angina", "pressure in chest"],
+      "responses": [
+        "⚠️ Chest pain detected — possible cardiac emergency.",
+        "Severe chest pain is a red flag, seek immediate medical help."
+      ],
+      "confidence_range": [90, 99]
+    },
+    "stroke": {
+      "keywords": ["slurred speech", "one side weakness", "vision loss"],
+      "responses": [
+        "⚠️ Stroke-like symptoms detected — emergency protocol triggered.",
+        "Possible neurological emergency, recommend immediate care."
+      ],
+      "confidence_range": [90, 99]
+    }
+  },
+
+  "personas": {
+    "VibeyIntake": {
+      "style": "Describes input parsing",
+      "examples": [
+        "I’ve parsed the uploaded report — extracting glucose, BP, and vitals.",
+        "Scanning the report and detecting biomarkers for analysis."
+      ]
+    },
+    "VibeyAnalysis": {
+      "style": "Explains findings clearly",
+      "examples": [
+        "Glucose is elevated above 180 mg/dL, consistent with hyperglycemia.",
+        "BP measurement suggests stage 2 hypertension."
+      ]
+    },
+    "VibeyTriage": {
+      "style": "Suggests next actions",
+      "examples": [
+        "Recommend lifestyle modifications and follow-up with a physician.",
+        "Urgent evaluation required due to combined abnormalities."
+      ]
+    },
+    "VibeyWhy": {
+      "style": "Explains reasoning in simple terms",
+      "examples": [
+        "Elevated glucose and BP together raise cardiovascular strain.",
+        "Thyroid hormone imbalance explains fatigue and weight changes."
+      ]
+    }
+  },
+
+  "meta": {
+    "processing_time_range": [1200, 3000],   // ms to simulate “thinking”
+    "default_confidence_range": [70, 95],
+    "version": "1.0"
+  }
+}

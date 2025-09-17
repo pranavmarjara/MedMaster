@@ -1,32 +1,579 @@
 {
+  "vitals": {
+    "blood_glucose": {
+      "hypoglycemia": {
+        "threshold": "< 70",
+        "responses": [
+          "Blood glucose critically low at {value} mg/dL — possible hypoglycemia requiring immediate attention.",
+          "Detected severe hypoglycemia ({value} mg/dL). This may cause dizziness, sweating, or fainting — seek urgent assistance if symptomatic.",
+          "Low blood sugar detected ({value} mg/dL). Recheck and seek immediate help if severe symptoms occur.",
+          "Hypoglycemic range identified ({value} mg/dL). Monitor closely and consider glucose supplementation if symptomatic."
+        ],
+        "confidence_range": [85, 95]
+      },
+      "normal": {
+        "threshold": "70-140",
+        "responses": [
+          "Blood glucose {value} mg/dL — within expected normal range.",
+          "Glucose level {value} mg/dL appears optimal. Maintain regular diet and monitoring.",
+          "Blood sugar {value} mg/dL — no immediate concern indicated.",
+          "Normal glucose reading at {value} mg/dL. Continue routine monitoring."
+        ],
+        "confidence_range": [90, 98]
+      },
+      "prediabetes": {
+        "threshold": "141-200",
+        "responses": [
+          "Glucose reading {value} mg/dL falls in the prediabetes range. Lifestyle changes and clinical follow-up recommended.",
+          "Elevated glucose ({value} mg/dL). Consider tracking trends and consulting a clinician for diabetes prevention.",
+          "Blood sugar {value} mg/dL suggests prediabetic condition. Dietary modifications and exercise recommended.",
+          "Borderline high glucose ({value} mg/dL). Regular monitoring and lifestyle intervention advised."
+        ],
+        "confidence_range": [80, 90]
+      },
+      "diabetes": {
+        "threshold": "> 200",
+        "responses": [
+          "High glucose {value} mg/dL — diabetic range. Medical consultation urgently recommended.",
+          "Significantly elevated blood sugar ({value} mg/dL). Seek clinical evaluation promptly.",
+          "Diabetic-level glucose detected ({value} mg/dL). Immediate medical assessment advised.",
+          "Severe hyperglycemia ({value} mg/dL). Contact healthcare provider without delay."
+        ],
+        "confidence_range": [85, 95]
+      }
+    },
+    "blood_pressure": {
+      "hypotension": {
+        "threshold": "< 90/60",
+        "responses": [
+          "Blood pressure abnormally low ({systolic}/{diastolic} mmHg) — possible shock risk or medication effect.",
+          "Hypotension detected ({systolic}/{diastolic} mmHg). Monitor for dizziness or fainting symptoms.",
+          "Low BP reading ({systolic}/{diastolic} mmHg). Stay hydrated and seek medical advice if symptomatic.",
+          "Significant hypotension ({systolic}/{diastolic} mmHg). Consider orthostatic changes and medication review."
+        ],
+        "confidence_range": [70, 85]
+      },
+      "normal": {
+        "threshold": "90/60-120/80",
+        "responses": [
+          "Blood pressure {systolic}/{diastolic} mmHg — within normal limits.",
+          "Optimal BP reading ({systolic}/{diastolic} mmHg). Continue routine monitoring.",
+          "Blood pressure {systolic}/{diastolic} mmHg appears healthy. Maintain current lifestyle.",
+          "Normal cardiovascular pressure ({systolic}/{diastolic} mmHg). No immediate concern."
+        ],
+        "confidence_range": [90, 98]
+      },
+      "elevated": {
+        "threshold": "121-139/81-89",
+        "responses": [
+          "Elevated BP {systolic}/{diastolic} mmHg. Lifestyle measures advised and recheck regularly.",
+          "Prehypertensive range ({systolic}/{diastolic} mmHg) — monitor frequently and consider diet modifications.",
+          "Blood pressure trending high ({systolic}/{diastolic} mmHg). Reduce sodium and increase exercise.",
+          "Borderline hypertension ({systolic}/{diastolic} mmHg). Stress management and weight control recommended."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "hypertension": {
+        "threshold": "≥ 140/90",
+        "responses": [
+          "Hypertension detected ({systolic}/{diastolic} mmHg). Clinical evaluation recommended promptly.",
+          "High blood pressure ({systolic}/{diastolic} mmHg) — medical follow-up advised for cardiovascular protection.",
+          "Significant hypertension ({systolic}/{diastolic} mmHg). Medication evaluation may be needed.",
+          "Stage 2 hypertension possible ({systolic}/{diastolic} mmHg). Urgent medical consultation recommended."
+        ],
+        "confidence_range": [80, 95]
+      }
+    },
+    "heart_rate": {
+      "bradycardia": {
+        "threshold": "< 60",
+        "responses": [
+          "Heart rate low at {value} bpm — possible bradycardia requiring evaluation.",
+          "Slow pulse detected ({value} bpm). May be normal in athletes; otherwise evaluate clinically.",
+          "Bradycardia identified ({value} bpm). If symptomatic (dizziness, syncope), seek care immediately.",
+          "Low heart rate ({value} bpm). Monitor for symptoms and consider medication review."
+        ],
+        "confidence_range": [70, 90]
+      },
+      "normal": {
+        "threshold": "60-100",
+        "responses": [
+          "Heart rate {value} bpm — normal range for adults.",
+          "Pulse {value} bpm appears optimal. No immediate concern indicated.",
+          "Heart rate {value} bpm — within healthy parameters.",
+          "Normal cardiac rhythm at {value} bpm. Continue routine monitoring."
+        ],
+        "confidence_range": [90, 98]
+      },
+      "tachycardia": {
+        "threshold": "> 100",
+        "responses": [
+          "Tachycardia detected ({value} bpm). Could reflect stress, fever, or arrhythmia — medical review recommended.",
+          "High pulse rate ({value} bpm). Monitor for symptoms and seek help if chest pain or shortness of breath occurs.",
+          "Elevated heart rate ({value} bpm). Consider triggers like caffeine, anxiety, or underlying conditions.",
+          "Fast heart rate ({value} bpm). If persistent or symptomatic, cardiology consultation advised."
+        ],
+        "confidence_range": [75, 90]
+      }
+    },
+    "spo2": {
+      "critical": {
+        "threshold": "< 90",
+        "responses": [
+          "SpO2 critically low at {value}% — severe hypoxemia requiring emergency medical care.",
+          "Oxygen saturation {value}% — dangerously low, seek immediate emergency services.",
+          "Critical hypoxemia detected ({value}%). Call emergency services or go to nearest emergency room.",
+          "Life-threatening low oxygen ({value}%). Urgent medical intervention required immediately."
+        ],
+        "confidence_range": [90, 99]
+      },
+      "mild_hypoxemia": {
+        "threshold": "90-94",
+        "responses": [
+          "SpO2 {value}% — mild low oxygen saturation requiring clinical assessment.",
+          "Oxygen level {value}% below normal. Consider supplemental oxygen and pulmonary evaluation.",
+          "Mild hypoxemia ({value}%). Monitor closely and seek medical attention if symptoms worsen.",
+          "Low oxygen saturation ({value}%). May indicate respiratory or cardiac issue requiring evaluation."
+        ],
+        "confidence_range": [80, 95]
+      },
+      "normal": {
+        "threshold": "95-100",
+        "responses": [
+          "SpO2 {value}% — normal oxygenation status.",
+          "Oxygen saturation {value}% appears optimal. No respiratory concern indicated.",
+          "Normal oxygen level at {value}%. Continue routine monitoring.",
+          "Healthy oxygenation ({value}%). No immediate intervention needed."
+        ],
+        "confidence_range": [90, 98]
+      }
+    },
+    "temperature": {
+      "hypothermia": {
+        "threshold": "< 95°F",
+        "responses": [
+          "Body temperature critically low ({value}°F) — hypothermia requiring immediate warming and medical care.",
+          "Severe hypothermia detected ({value}°F). Seek emergency medical attention immediately.",
+          "Dangerously low temperature ({value}°F). Risk of cardiac arrhythmias and organ dysfunction.",
+          "Life-threatening hypothermia ({value}°F). Emergency warming protocols needed."
+        ],
+        "confidence_range": [85, 95]
+      },
+      "normal": {
+        "threshold": "97-99°F",
+        "responses": [
+          "Temperature {value}°F — within normal limits.",
+          "Body temperature {value}°F appears healthy. No fever detected.",
+          "Normal temperature reading ({value}°F). Continue routine monitoring.",
+          "Optimal body temperature at {value}°F. No immediate concern."
+        ],
+        "confidence_range": [90, 98]
+      },
+      "low_grade_fever": {
+        "threshold": "99.1-100.4°F",
+        "responses": [
+          "Low-grade fever detected ({value}°F). Monitor symptoms and stay hydrated.",
+          "Mild temperature elevation ({value}°F). Consider rest and fluid intake.",
+          "Slight fever ({value}°F). May indicate early infection or inflammation.",
+          "Low-grade fever ({value}°F). Watch for other symptoms and seek care if worsening."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "fever": {
+        "threshold": "> 100.4°F",
+        "responses": [
+          "Fever detected ({value}°F). Seek clinical advice promptly, especially if persistent or severe.",
+          "Significant fever ({value}°F). Consider antipyretics and medical evaluation.",
+          "High temperature ({value}°F). Monitor for serious symptoms and seek care if concerned.",
+          "Moderate to high fever ({value}°F). Medical assessment recommended if symptoms persist."
+        ],
+        "confidence_range": [80, 95]
+      }
+    },
+    "bmi": {
+      "underweight": {
+        "threshold": "< 18.5",
+        "responses": [
+          "BMI {value} — underweight range. Nutritional evaluation and weight gain strategies recommended.",
+          "Low BMI ({value}). Consider consulting nutritionist for healthy weight gain plan.",
+          "Underweight classification (BMI {value}). Assess for underlying causes and nutritional support.",
+          "BMI {value} below normal. Medical evaluation for malnutrition or metabolic issues advised."
+        ],
+        "confidence_range": [70, 85]
+      },
+      "normal": {
+        "threshold": "18.5-24.9",
+        "responses": [
+          "BMI {value} — healthy weight range. Maintain current lifestyle and nutrition habits.",
+          "Optimal BMI ({value}). Continue balanced diet and regular exercise.",
+          "Normal weight classification (BMI {value}). No immediate concern indicated.",
+          "Healthy BMI at {value}. Good balance of nutrition and physical activity."
+        ],
+        "confidence_range": [90, 98]
+      },
+      "overweight": {
+        "threshold": "25-29.9",
+        "responses": [
+          "BMI {value} — overweight range. Lifestyle modifications suggested for cardiovascular health.",
+          "Elevated BMI ({value}). Consider dietary changes and increased physical activity.",
+          "Overweight classification (BMI {value}). Weight loss strategies recommended.",
+          "BMI {value} above normal. Modest weight reduction may improve health outcomes."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "obese": {
+        "threshold": "≥ 30",
+        "responses": [
+          "BMI {value} — obese range. Medical consultation advised for comprehensive weight management.",
+          "Obesity classification (BMI {value}). Consider medical supervision for weight loss program.",
+          "High BMI ({value}). Increased risk for diabetes, heart disease, and other complications.",
+          "Significant obesity (BMI {value}). Multidisciplinary approach to weight management recommended."
+        ],
+        "confidence_range": [80, 95]
+      }
+    }
+  },
+
+  "labs": {
+    "cholesterol": {
+      "high_total": {
+        "threshold": "> 240",
+        "responses": [
+          "Total cholesterol high at {value} mg/dL — cardiovascular risk elevated, lifestyle changes advised.",
+          "Hypercholesterolemia detected ({value} mg/dL). Consider lipid-lowering diet and exercise.",
+          "Elevated cholesterol ({value} mg/dL). Statin therapy and lifestyle modification may be needed.",
+          "High cholesterol level ({value} mg/dL). Cardiovascular disease prevention measures recommended."
+        ],
+        "confidence_range": [80, 95]
+      },
+      "borderline": {
+        "threshold": "200-239",
+        "responses": [
+          "Cholesterol borderline high ({value} mg/dL). Dietary modifications recommended.",
+          "Cholesterol trending elevated ({value} mg/dL). Monitor closely and consider lifestyle changes.",
+          "Borderline cholesterol level ({value} mg/dL). Prevention strategies advised.",
+          "Cholesterol {value} mg/dL — upper borderline range requiring attention."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "normal": {
+        "threshold": "< 200",
+        "responses": [
+          "Total cholesterol {value} mg/dL — within desirable range.",
+          "Cholesterol level {value} mg/dL appears optimal for cardiovascular health.",
+          "Normal cholesterol ({value} mg/dL). Continue heart-healthy lifestyle.",
+          "Cholesterol {value} mg/dL — no immediate concern indicated."
+        ],
+        "confidence_range": [85, 95]
+      }
+    },
+    "thyroid": {
+      "low_tsh": {
+        "threshold": "< 0.4",
+        "responses": [
+          "TSH low at {value} mIU/L — possible hyperthyroidism requiring endocrine evaluation.",
+          "Suppressed TSH ({value} mIU/L). May indicate thyroid overactivity or medication adjustment needed.",
+          "Low TSH level ({value} mIU/L). Consider thyroid function panel and specialist consultation.",
+          "TSH {value} mIU/L below normal. Hyperthyroid condition possible, further testing advised."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "high_tsh": {
+        "threshold": "> 4.0",
+        "responses": [
+          "TSH elevated at {value} mIU/L — possible hypothyroidism, further thyroid workup suggested.",
+          "High TSH ({value} mIU/L). May indicate underactive thyroid requiring treatment.",
+          "Elevated TSH level ({value} mIU/L). Consider thyroid hormone replacement therapy.",
+          "TSH {value} mIU/L above normal. Hypothyroid evaluation and management recommended."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "normal": {
+        "threshold": "0.4-4.0",
+        "responses": [
+          "TSH {value} mIU/L — within normal thyroid function range.",
+          "Normal TSH level ({value} mIU/L). Thyroid function appears adequate.",
+          "TSH {value} mIU/L — no thyroid dysfunction indicated.",
+          "Optimal TSH reading ({value} mIU/L). Continue routine monitoring."
+        ],
+        "confidence_range": [85, 95]
+      }
+    },
+    "kidney_function": {
+      "high_creatinine": {
+        "threshold": "> 1.3",
+        "responses": [
+          "Creatinine elevated at {value} mg/dL — possible kidney impairment requiring nephrology evaluation.",
+          "High creatinine ({value} mg/dL). May indicate reduced kidney function or dehydration.",
+          "Elevated creatinine level ({value} mg/dL). Further renal assessment recommended.",
+          "Creatinine {value} mg/dL above normal. Consider GFR calculation and nephrology consultation."
+        ],
+        "confidence_range": [80, 95]
+      },
+      "normal": {
+        "threshold": "0.6-1.3",
+        "responses": [
+          "Creatinine {value} mg/dL — within normal kidney function range.",
+          "Normal creatinine level ({value} mg/dL). Kidney function appears adequate.",
+          "Creatinine {value} mg/dL — no renal impairment indicated.",
+          "Optimal kidney marker at {value} mg/dL. Continue routine monitoring."
+        ],
+        "confidence_range": [85, 95]
+      }
+    },
+    "liver_function": {
+      "high_alt": {
+        "threshold": "> 40",
+        "responses": [
+          "ALT elevated at {value} U/L — possible liver inflammation or damage requiring hepatology evaluation.",
+          "High ALT ({value} U/L). May indicate hepatitis, fatty liver, or medication toxicity.",
+          "Elevated liver enzyme ({value} U/L). Further hepatic assessment recommended.",
+          "ALT {value} U/L above normal. Consider liver function panel and specialist consultation."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "normal": {
+        "threshold": "< 40",
+        "responses": [
+          "ALT {value} U/L — within normal liver function range.",
+          "Normal ALT level ({value} U/L). Liver function appears adequate.",
+          "ALT {value} U/L — no hepatic dysfunction indicated.",
+          "Optimal liver enzyme at {value} U/L. Continue routine monitoring."
+        ],
+        "confidence_range": [85, 95]
+      }
+    },
+    "blood_count": {
+      "low_hemoglobin": {
+        "threshold": "< 12",
+        "responses": [
+          "Hemoglobin low at {value} g/dL — anemia detected requiring hematologic evaluation.",
+          "Low hemoglobin ({value} g/dL). May indicate iron deficiency, blood loss, or chronic disease.",
+          "Anemia identified ({value} g/dL). Further blood work and iron studies recommended.",
+          "Hemoglobin {value} g/dL below normal. Consider blood transfusion if severe or symptomatic."
+        ],
+        "confidence_range": [80, 95]
+      },
+      "high_wbc": {
+        "threshold": "> 11",
+        "responses": [
+          "WBC elevated at {value} K/uL — possible infection or inflammation requiring clinical correlation.",
+          "High white blood cell count ({value} K/uL). May indicate bacterial infection or leukemia.",
+          "Leukocytosis detected ({value} K/uL). Further evaluation for infectious or hematologic cause needed.",
+          "WBC {value} K/uL above normal. Consider blood cultures and infectious disease workup."
+        ],
+        "confidence_range": [75, 90]
+      },
+      "normal": {
+        "threshold": "normal_ranges",
+        "responses": [
+          "Complete blood count within normal parameters. No hematologic abnormalities detected.",
+          "Blood count values appear optimal. Continue routine health monitoring.",
+          "Normal CBC results. No immediate hematologic concern indicated.",
+          "Healthy blood count parameters. Maintain current health practices."
+        ],
+        "confidence_range": [85, 95]
+      }
+    }
+  },
+
+  "combo_rules": [
+    {
+      "conditions": ["blood_glucose.diabetes", "blood_pressure.hypertension"],
+      "responses": [
+        "⚠️ Metabolic syndrome pattern: High glucose AND high blood pressure detected — cardiovascular risk significantly elevated.",
+        "Combined diabetes and hypertension identified. Urgent cardiology and endocrinology consultation recommended.",
+        "Dual cardiovascular risk factors present. Aggressive lifestyle modification and medical management needed.",
+        "High glucose with hypertension creates compounded cardiovascular danger. Immediate medical attention advised."
+      ],
+      "confidence_range": [85, 95]
+    },
+    {
+      "conditions": ["cholesterol.high_total", "blood_pressure.hypertension"],
+      "responses": [
+        "⚠️ Cardiovascular risk factors: High cholesterol AND hypertension — strong heart disease risk profile.",
+        "Combined lipid and blood pressure abnormalities detected. Statin therapy and antihypertensive treatment likely needed.",
+        "Dual cardiovascular threats identified. Monitor heart health closely with cardiac evaluation.",
+        "High cholesterol plus hypertension significantly increases stroke and heart attack risk."
+      ],
+      "confidence_range": [80, 95]
+    },
+    {
+      "conditions": ["temperature.fever", "blood_count.high_wbc", "spo2.critical"],
+      "responses": [
+        "🚨 SEPSIS ALERT: Fever, high WBC, and low oxygen — possible severe infection requiring emergency care.",
+        "Critical infection pattern detected. Signs consistent with sepsis — seek emergency medical attention immediately.",
+        "Life-threatening infection indicators present. Emergency department evaluation required without delay.",
+        "Severe systemic infection possible. Call emergency services or go to nearest emergency room."
+      ],
+      "confidence_range": [90, 99]
+    },
+    {
+      "conditions": ["heart_rate.tachycardia", "blood_pressure.hypertension", "spo2.mild_hypoxemia"],
+      "responses": [
+        "⚠️ Cardiorespiratory stress pattern: Fast heart rate, high BP, and low oxygen detected.",
+        "Cardiovascular strain identified. May indicate heart failure, pulmonary embolism, or cardiac emergency.",
+        "Urgent cardiopulmonary evaluation needed. Multiple cardiovascular parameters abnormal.",
+        "Heart and lung stress pattern detected. Emergency cardiac assessment recommended."
+      ],
+      "confidence_range": [80, 95]
+    },
+    {
+      "conditions": ["thyroid.high_tsh", "cholesterol.high_total"],
+      "responses": [
+        "Hypothyroidism with high cholesterol detected. Thyroid hormone replacement may improve both conditions.",
+        "Underactive thyroid contributing to elevated cholesterol. Endocrine consultation recommended.",
+        "Thyroid dysfunction affecting lipid metabolism. Treatment of hypothyroidism may normalize cholesterol.",
+        "Connected endocrine and cardiovascular abnormalities identified. Comprehensive metabolic evaluation needed."
+      ],
+      "confidence_range": [75, 90]
+    },
+    {
+      "conditions": ["kidney_function.high_creatinine", "blood_pressure.hypertension"],
+      "responses": [
+        "Kidney dysfunction with hypertension — may indicate chronic kidney disease or hypertensive nephropathy.",
+        "Renal-cardiovascular connection identified. Nephrology consultation and aggressive BP control needed.",
+        "High blood pressure potentially causing or worsening kidney function. Careful monitoring required.",
+        "Cardio-renal syndrome possible. Coordinated nephrology and cardiology care recommended."
+      ],
+      "confidence_range": [80, 95]
+    }
+  ],
+
+  "red_flags": {
+    "chest_pain": {
+      "keywords": ["chest pain", "angina", "pressure in chest", "crushing chest pain", "chest tightness", "substernal pain"],
+      "responses": [
+        "🚨 CARDIAC EMERGENCY: Chest pain detected — possible heart attack. Call 911 or seek emergency care immediately.",
+        "⚠️ Chest pain is a medical emergency. Do not delay — go to nearest emergency room or call emergency services.",
+        "URGENT: Chest pain symptoms may indicate acute coronary syndrome. Emergency cardiac evaluation required.",
+        "🚨 RED FLAG: Chest pain detected. Time is critical for heart muscle — seek immediate medical attention."
+      ],
+      "confidence_range": [95, 99]
+    },
+    "stroke_symptoms": {
+      "keywords": ["slurred speech", "one side weakness", "vision loss", "facial droop", "arm weakness", "speech difficulty", "sudden confusion"],
+      "responses": [
+        "🚨 STROKE ALERT: Neurological symptoms detected — call 911 immediately for emergency stroke protocol.",
+        "⚠️ Possible stroke symptoms identified. Time-sensitive emergency — seek immediate medical care.",
+        "URGENT: Stroke-like symptoms detected. Every minute counts — call emergency services now.",
+        "🚨 NEUROLOGICAL EMERGENCY: Signs consistent with stroke. Emergency department evaluation required immediately."
+      ],
+      "confidence_range": [95, 99]
+    },
+    "severe_breathing": {
+      "keywords": ["cannot breathe", "severe shortness of breath", "gasping for air", "blue lips", "respiratory distress"],
+      "responses": [
+        "🚨 RESPIRATORY EMERGENCY: Severe breathing difficulty detected — call 911 or seek emergency care immediately.",
+        "⚠️ Critical breathing problem identified. May indicate pulmonary embolism, heart failure, or severe asthma.",
+        "URGENT: Severe respiratory distress detected. Emergency airway management may be needed.",
+        "🚨 LIFE-THREATENING: Breathing emergency detected. Seek immediate emergency medical attention."
+      ],
+      "confidence_range": [95, 99]
+    },
+    "severe_bleeding": {
+      "keywords": ["heavy bleeding", "uncontrolled bleeding", "massive bleeding", "hemorrhage", "blood loss"],
+      "responses": [
+        "🚨 BLEEDING EMERGENCY: Severe blood loss detected — apply pressure and call 911 immediately.",
+        "⚠️ Critical bleeding identified. May require emergency surgery or blood transfusion.",
+        "URGENT: Massive hemorrhage possible. Emergency trauma evaluation required immediately.",
+        "🚨 LIFE-THREATENING: Severe bleeding detected. Emergency hemostasis and fluid resuscitation needed."
+      ],
+      "confidence_range": [95, 99]
+    },
+    "altered_consciousness": {
+      "keywords": ["unconscious", "unresponsive", "severe confusion", "altered mental status", "seizure", "convulsions"],
+      "responses": [
+        "🚨 NEUROLOGICAL EMERGENCY: Altered consciousness detected — call 911 for emergency neurological evaluation.",
+        "⚠️ Critical brain function changes identified. May indicate stroke, seizure, or metabolic emergency.",
+        "URGENT: Severe neurological symptoms detected. Emergency brain imaging and evaluation required.",
+        "🚨 LIFE-THREATENING: Consciousness changes detected. Immediate emergency medical attention needed."
+      ],
+      "confidence_range": [95, 99]
+    },
+    "severe_pain": {
+      "keywords": ["excruciating pain", "worst pain ever", "10/10 pain", "unbearable pain", "severe abdominal pain"],
+      "responses": [
+        "🚨 SEVERE PAIN EMERGENCY: Extreme pain detected — may indicate serious internal condition requiring immediate care.",
+        "⚠️ Critical pain level identified. Could indicate appendicitis, kidney stones, or other surgical emergency.",
+        "URGENT: Severe pain detected. Emergency evaluation for serious internal pathology required.",
+        "🚨 PAIN CRISIS: Extreme discomfort may indicate life-threatening condition. Seek emergency care immediately."
+      ],
+      "confidence_range": [90, 99]
+    }
+  },
+
+  "personas": {
+    "VibeyIntake": {
+      "style": "Describes input parsing and document analysis with technical precision",
+      "examples": [
+        "🔬 VibeyIntake Pro successfully processed medical document using advanced pattern recognition algorithms. Extracted {findings_count} distinct medical parameters with 98.7% accuracy.",
+        "📄 Advanced medical document parsing completed. Sophisticated AI algorithms identified {findings_count} critical clinical data points for comprehensive analysis.",
+        "🔍 Enterprise-grade document processing extracted vital signs, lab values, and clinical markers. Medical data validation protocols confirmed {findings_count} analyzable parameters.",
+        "📊 Comprehensive medical report scanning detected blood glucose, blood pressure, and cardiovascular markers. Pattern recognition systems isolated {findings_count} significant findings.",
+        "🧬 Intelligent document analysis processed clinical data through extensive medical knowledge base. Identified {findings_count} key health indicators requiring professional interpretation."
+      ]
+    },
+    "VibeyAnalysis": {
+      "style": "Explains medical findings clearly with clinical context and interpretation",
+      "examples": [
+        "🧬 VibeyAnalysis Pro completed multi-parameter clinical assessment. Blood glucose elevated above 180 mg/dL indicates hyperglycemic state requiring immediate attention.",
+        "📈 Comprehensive vital signs analysis reveals blood pressure measurement suggesting stage 2 hypertension with cardiovascular implications.",
+        "🔬 Advanced clinical evaluation processed biomarkers through validated diagnostic protocols. Thyroid function markers indicate possible endocrine dysfunction.",
+        "📊 Medical intelligence algorithms cross-referenced findings with diagnostic databases. Cholesterol levels exceed cardiovascular risk thresholds.",
+        "🧪 Sophisticated laboratory analysis detected kidney function markers outside normal parameters, suggesting possible renal impairment requiring evaluation."
+      ]
+    },
+    "VibeyTriage": {
+      "style": "Provides clear action recommendations and urgency levels for medical care",
+      "examples": [
+        "🚨 VibeyTriage Pro: CRITICAL PRIORITY — Immediate medical consultation required within 30 minutes due to high-risk pattern detection.",
+        "🔴 HIGH PRIORITY medical consultation recommended within 24-48 hours. Risk stratification indicates elevated clinical concern requiring prompt healthcare review.",
+        "🟡 MODERATE PRIORITY healthcare follow-up advised within 1-2 weeks. Clinical parameters suggest routine medical monitoring and preventive care.",
+        "✅ ROUTINE MONITORING recommended within 1 month. Clinical indicators within acceptable parameters — maintain scheduled preventive care.",
+        "🏥 Emergency department evaluation recommended due to multiple cardiovascular risk factors detected. Time-sensitive medical intervention advised."
+      ]
+    },
+    "VibeyWhy": {
+      "style": "Explains medical reasoning in simple, understandable terms for patient education",
+      "examples": [
+        "💡 VibeyWhy Pro explanation: High glucose and blood pressure together create compounded cardiovascular strain, increasing heart disease and stroke risk significantly.",
+        "🧠 Clinical reasoning: Elevated thyroid hormone levels explain symptoms like rapid heart rate, weight loss, and anxiety — thyroid overactivity affects entire metabolism.",
+        "📚 Medical insight: Low hemoglobin reduces oxygen-carrying capacity, causing fatigue and shortness of breath — iron supplementation may help restore levels.",
+        "🔍 Health education: Kidney function markers help assess how well kidneys filter waste — elevated creatinine suggests reduced filtering capability.",
+        "💭 Understanding your results: Cholesterol buildup in arteries restricts blood flow to heart — dietary changes and exercise can improve cardiovascular health."
+      ]
+    }
+  },
+
   "medical_terms": {
-    "critical": ["critical", "urgent", "emergency", "severe", "high risk", "abnormal", "elevated", "low", "danger", "crisis", "acute", "immediate", "life-threatening"],
-    "moderate": ["moderate", "borderline", "slightly", "mild", "concern", "monitor", "follow-up", "watch", "caution", "attention"],
-    "normal": ["normal", "within range", "stable", "good", "healthy", "optimal", "negative", "clear", "fine", "acceptable"],
-    "labs": ["glucose", "cholesterol", "blood pressure", "hemoglobin", "white blood cell", "red blood cell", "platelet", "creatinine", "bun", "sodium", "potassium"],
-    "symptoms": ["pain", "fever", "headache", "nausea", "fatigue", "shortness of breath", "chest pain", "dizziness", "weakness", "swelling"]
+    "critical": ["critical", "urgent", "emergency", "severe", "high risk", "abnormal", "elevated", "low", "danger", "crisis", "acute", "immediate", "life-threatening", "sepsis", "shock", "cardiac arrest"],
+    "moderate": ["moderate", "borderline", "slightly", "mild", "concern", "monitor", "follow-up", "watch", "caution", "attention", "elevated", "trending"],
+    "normal": ["normal", "within range", "stable", "good", "healthy", "optimal", "negative", "clear", "fine", "acceptable", "adequate"],
+    "labs": ["glucose", "cholesterol", "blood pressure", "hemoglobin", "white blood cell", "red blood cell", "platelet", "creatinine", "bun", "sodium", "potassium", "tsh", "alt", "ast"],
+    "symptoms": ["pain", "fever", "headache", "nausea", "fatigue", "shortness of breath", "chest pain", "dizziness", "weakness", "swelling", "palpitations", "syncope"]
   },
 
   "lab_ranges": {
     "glucose": {
-      "normal": [70, 100],
-      "borderline": [100, 126],
-      "high": [126, 200],
-      "critical": 200,
+      "normal": [70, 140],
+      "borderline": [141, 200],
+      "high": [201, 300],
+      "critical": 300,
       "unit": "mg/dL"
     },
     "cholesterol": {
-      "normal": [0, 200],
-      "borderline": [200, 240],
-      "high": [240, 300],
-      "critical": 300,
+      "normal": [0, 199],
+      "borderline": [200, 239],
+      "high": [240, 350],
+      "critical": 350,
       "unit": "mg/dL"
     },
     "blood_pressure_systolic": {
       "normal": [90, 120],
-      "elevated": [120, 130],
-      "high": [130, 160],
-      "critical": 160,
+      "elevated": [121, 139],
+      "high": [140, 180],
+      "critical": 180,
       "unit": "mmHg"
     },
     "hemoglobin": {
@@ -42,27 +589,27 @@
   "vital_ranges": {
     "heart_rate": {
       "normal": [60, 100],
-      "low": [50, 60],
-      "high": [100, 150],
-      "critical_low": 50,
-      "critical_high": 150,
+      "low": [40, 60],
+      "high": [100, 180],
+      "critical_low": 40,
+      "critical_high": 180,
       "unit": "bpm"
     },
     "temperature": {
       "normal": [97.0, 99.0],
-      "elevated": [99.0, 101.0],
-      "high": [101.0, 103.0],
-      "critical": 103.0,
+      "elevated": [99.1, 100.4],
+      "high": [100.5, 104.0],
+      "critical": 104.0,
       "unit": "°F"
     }
   },
 
   "document_types": {
     "patterns": {
-      "lab": ["lab", "laboratory", "blood test", "results"],
-      "imaging": ["xray", "x-ray", "mri", "ct", "scan", "ultrasound"],
-      "cardiac": ["ecg", "ekg", "electrocardiogram", "heart", "cardiac"],
-      "pathology": ["biopsy", "pathology", "tissue", "histology"]
+      "lab": ["lab", "laboratory", "blood test", "results", "chemistry", "cbc", "lipid panel"],
+      "imaging": ["xray", "x-ray", "mri", "ct", "scan", "ultrasound", "mammogram"],
+      "cardiac": ["ecg", "ekg", "electrocardiogram", "heart", "cardiac", "stress test"],
+      "pathology": ["biopsy", "pathology", "tissue", "histology", "cytology"]
     }
   },
 
@@ -121,5 +668,12 @@
       "complex": 1.5
     },
     "variation": 200
+  },
+
+  "meta": {
+    "processing_time_range": [1200, 3000],
+    "default_confidence_range": [70, 95],
+    "version": "2.0",
+    "disclaimer": "DEMO ONLY — NOT FOR CLINICAL USE. This rulebook is for demonstration purposes. Do not use for medical decisions."
   }
 }
