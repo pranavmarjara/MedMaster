@@ -4,7 +4,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { storage } from "./storage";
-import { analyzeMedicalReport, analyzeImageReport } from "./gemini";
+import { analyzeMedicalReport, analyzeImageReport } from "./openai";
 import { db } from "./db";
 import { medicalAnalyses } from "@shared/schema";
 
