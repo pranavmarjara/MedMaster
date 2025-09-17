@@ -219,8 +219,8 @@ class VibeyMedicalIntelligence {
     
     // Enhanced pattern extraction for specific medical values
     const labPatterns = [
-      // Blood glucose patterns
-      { regex: /(?:glucose|blood\s*sugar|random\s*blood\s*sugar|rbs)[\s\w:]*?(\d+\.?\d*)\s*mg\/dl/gi, 
+      // Blood glucose patterns - very flexible to match table formats
+      { regex: /(?:glucose|blood\s*sugar|random\s*blood\s*sugar|rbs)[\s\S]*?(\d+\.?\d*)\s*(?:mg\/d[lL]|70\s*-\s*140)/gi, 
         type: 'glucose', unit: 'mg/dL', normalRange: '70-140' },
       
       // WBC patterns
