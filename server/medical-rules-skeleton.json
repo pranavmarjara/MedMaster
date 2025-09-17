@@ -1,0 +1,83 @@
+{
+  "vt": {
+    "bg": {
+      "low": {
+        "th": "< 70",
+        "r": ["Low glucose detected", "Sugar level requires attention"],
+        "cf": [75, 90]
+      },
+      "norm": {
+        "th": "70-140", 
+        "r": ["Glucose within range", "Normal sugar level"],
+        "cf": [85, 95]
+      },
+      "high": {
+        "th": "> 200",
+        "r": ["Elevated glucose detected", "High sugar level noted"],
+        "cf": [80, 95]
+      }
+    },
+    "bp": {
+      "low": {
+        "th": "< 90/60",
+        "r": ["Blood pressure low", "BP below normal"],
+        "cf": [70, 85]
+      },
+      "norm": {
+        "th": "90/60-120/80",
+        "r": ["Blood pressure normal", "BP within range"],
+        "cf": [90, 98]
+      },
+      "high": {
+        "th": "≥ 140/90",
+        "r": ["Blood pressure elevated", "BP above normal"],
+        "cf": [80, 95]
+      }
+    }
+  },
+  "lb": {
+    "ch": {
+      "high": {
+        "th": "> 240",
+        "r": ["Cholesterol elevated", "Lipid level high"],
+        "cf": [80, 95]
+      },
+      "norm": {
+        "th": "< 200",
+        "r": ["Cholesterol normal", "Lipid level acceptable"],
+        "cf": [85, 95]
+      }
+    }
+  },
+  "rf": {
+    "cp": {
+      "kw": ["chest pain", "angina"],
+      "r": ["🚨 Chest discomfort detected", "⚠️ Cardiac symptoms noted"],
+      "cf": [95, 99]
+    }
+  },
+  "ps": {
+    "vi": {
+      "st": "Input processing specialist",
+      "ex": ["Processing medical data", "Analyzing report structure"]
+    },
+    "va": {
+      "st": "Clinical analysis specialist", 
+      "ex": ["Evaluating health markers", "Cross-referencing patterns"]
+    },
+    "vt": {
+      "st": "Triage specialist",
+      "ex": ["Priority assessment complete", "Healthcare guidance provided"]
+    },
+    "vw": {
+      "st": "Medical explanation specialist",
+      "ex": ["Clinical reasoning analyzed", "Health insights generated"]
+    }
+  },
+  "cfg": {
+    "pt_rng": [1200, 3000],
+    "cf_rng": [70, 95],
+    "ver": "2.0",
+    "note": "Vibey reasoning engine skeleton - production data loaded from secure source"
+  }
+}

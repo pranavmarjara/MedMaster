@@ -4,3 +4,6 @@ dist
 server/public
 vite.config.ts.*
 *.tar.gz
+
+# Exclude Vibey brain data from version control
+/server/.data/*
