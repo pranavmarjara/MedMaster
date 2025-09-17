@@ -6,6 +6,18 @@ import fs from "fs";
 import { storage } from "./storage";
 import { analyzeMedicalReport, analyzeImageReport } from "./gemini";
 
+// Dynamic import for pdf-parse to avoid startup issues
+async function parsePdf(buffer: Buffer): Promise<string> {
+  try {
+    const pdfParse = (await import("pdf-parse")).default;
+    const data = await pdfParse(buffer);
+    return data.text;
+  } catch (error) {
+    console.error('PDF parsing error:', error);
+    throw error;
+  }
+}
+
 // Configure multer for file uploads
 const upload = multer({ 
   dest: 'uploads/',
@@ -75,9 +87,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
             console.error('Error reading text file:', readError);
             fileContent = `Medical document: ${originalName} (${mimeType}) - content extraction failed.`;
           }
+        } else if (mimeType === 'application/pdf') {
+          // Extract text from PDF
+          try {
+            const dataBuffer = fs.readFileSync(filePath);
+            fileContent = await parsePdf(dataBuffer);
+            console.log(`Extracted ${fileContent.length} characters from PDF: ${originalName}`);
+          } catch (pdfError) {
+            console.error('Error extracting PDF content:', pdfError);
+            fileContent = `Medical PDF document: ${originalName} - text extraction failed. Please ensure the PDF contains extractable text.`;
+          }
+        } else if (mimeType.includes('word') || mimeType.includes('msword') || mimeType.includes('officedocument')) {
+          // For Word documents, try to read as text (basic approach)
+          try {
+            // Try reading as UTF-8 text (works for some .doc files)
+            const rawContent = fs.readFileSync(filePath, 'utf-8');
+            // Clean up control characters and extract readable text
+            fileContent = rawContent.replace(/[\x00-\x1F\x7F-\x9F]/g, ' ').replace(/\s+/g, ' ').trim();
+            
+            if (fileContent.length < 50) {
+              throw new Error('Insufficient text extracted');
+            }
+            
+            console.log(`Extracted ${fileContent.length} characters from Word document: ${originalName}`);
+          } catch (wordError) {
+            console.error('Error extracting Word document content:', wordError);
+            fileContent = `Medical Word document: ${originalName} - For optimal analysis, please convert to PDF or text format. Word document processing is limited.`;
+          }
         } else {
-          // For PDFs and Word docs, extract basic text (simplified for demo)
-          fileContent = `Medical document: ${originalName} (${mimeType}) has been uploaded for analysis.`;
+          // For other document types
+          fileContent = `Medical document: ${originalName} (${mimeType}) - Please convert to PDF, text, or image format for optimal analysis.`;
+        }
+        
+        // Ensure we have meaningful content before analysis
+        if (fileContent.length < 20) {
+          fileContent = `Medical document: ${originalName} - Document appears to be empty or content could not be extracted. Please ensure the document contains readable text.`;
         }
         
         analysisResult = await analyzeMedicalReport(fileContent, originalName, mimeType);
