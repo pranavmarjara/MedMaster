@@ -223,16 +223,16 @@ class VibeyMedicalIntelligence {
       { regex: /(?:glucose|blood\s*sugar|random\s*blood\s*sugar|rbs)[\s\S]*?(\d+\.?\d*)\s*(?:mg\/d[lL]|70\s*-\s*140)/gi, 
         type: 'glucose', unit: 'mg/dL', normalRange: '70-140' },
       
-      // WBC patterns
-      { regex: /(?:wbc|white\s*blood\s*cell|total\s*wbc)[\s\w:]*?(\d+\.?\d*)\s*(?:\/cmm|per\s*cmm|\/mm3)/gi,
+      // WBC patterns - flexible for table formats
+      { regex: /(?:wbc\s*count|white\s*blood\s*cell|total\s*wbc)[\s\S]*?(?:H\s*)?(\d+\.?\d*)\s*\/cmm/gi,
         type: 'wbc_count', unit: '/cmm', normalRange: '4000-10000' },
       
-      // Hemoglobin patterns  
-      { regex: /(?:hemoglobin|hb|hgb)[\s\w:]*?(\d+\.?\d*)\s*g\/dl/gi,
+      // Hemoglobin patterns - flexible for table formats
+      { regex: /(?:hemoglobin|hb|hgb)[\s\S]*?(\d+\.?\d*)\s*g\/dl/gi,
         type: 'hemoglobin', unit: 'g/dL', normalRange: '13.0-16.5 (M), 12.0-15.5 (F)' },
       
-      // Cholesterol patterns
-      { regex: /(?:cholesterol|total\s*cholesterol)[\s\w:]*?(\d+\.?\d*)\s*mg\/dl/gi,
+      // Cholesterol patterns - flexible for table formats
+      { regex: /(?:cholesterol|total\s*cholesterol)[\s\S]*?(\d+\.?\d*)\s*mg\/dl/gi,
         type: 'cholesterol', unit: 'mg/dL', normalRange: '<200' },
       
       // Blood pressure patterns
@@ -241,7 +241,19 @@ class VibeyMedicalIntelligence {
       
       // Heart rate patterns
       { regex: /(?:heart\s*rate|pulse|hr)[\s\w:]*?(\d+)\s*(?:bpm|beats)/gi,
-        type: 'heart_rate', unit: 'bpm', normalRange: '60-100' }
+        type: 'heart_rate', unit: 'bpm', normalRange: '60-100' },
+      
+      // MPV (Mean Platelet Volume) patterns
+      { regex: /(?:mpv|mean\s*platelet\s*volume)[\s\S]*?(?:H\s*)?(\d+\.?\d*)\s*fl/gi,
+        type: 'mpv', unit: 'fL', normalRange: '7.5-10.3' },
+      
+      // Platelet count patterns
+      { regex: /(?:platelet\s*count)[\s\S]*?(\d+)\s*\/cmm/gi,
+        type: 'platelet_count', unit: '/cmm', normalRange: '150000-410000' },
+        
+      // Neutrophils patterns  
+      { regex: /(?:neutrophils)[\s\S]*?(\d+)\s*%/gi,
+        type: 'neutrophils', unit: '%', normalRange: '40-80' }
     ];
 
     // Extract specific lab values and flag abnormalities
@@ -314,6 +326,48 @@ class VibeyMedicalIntelligence {
               finding = `⚠️ BORDERLINE HIGH: Cholesterol ${value} mg/dL borderline high (desirable: <200). Lifestyle changes recommended.`;
             } else {
               finding = `✅ GOOD: Cholesterol ${value} mg/dL within desirable range (<200).`;
+            }
+            break;
+            
+          case 'mpv':
+            if (value > 10.3) {
+              isAbnormal = true;
+              severity = 'moderate';
+              finding = `⚠️ ELEVATED MPV: Mean Platelet Volume ${value} fL above normal range (7.5-10.3). May indicate platelet dysfunction or increased platelet production.`;
+            } else if (value < 7.5) {
+              isAbnormal = true;
+              severity = 'moderate';  
+              finding = `⚠️ LOW MPV: Mean Platelet Volume ${value} fL below normal range (7.5-10.3). May indicate bone marrow disorders.`;
+            } else {
+              finding = `✅ NORMAL: MPV ${value} fL within normal range (7.5-10.3).`;
+            }
+            break;
+            
+          case 'platelet_count':
+            if (value < 150000) {
+              isAbnormal = true;
+              severity = 'high';
+              finding = `⚠️ LOW PLATELETS: Platelet count ${value.toLocaleString()}/cmm below normal range (150,000-410,000). Risk of bleeding.`;
+            } else if (value > 410000) {
+              isAbnormal = true;
+              severity = 'moderate';
+              finding = `⚠️ HIGH PLATELETS: Platelet count ${value.toLocaleString()}/cmm above normal range (150,000-410,000). May indicate clotting disorders.`;
+            } else {
+              finding = `✅ NORMAL: Platelet count ${value.toLocaleString()}/cmm within normal range (150,000-410,000).`;
+            }
+            break;
+            
+          case 'neutrophils':
+            if (value > 80) {
+              isAbnormal = true;
+              severity = 'moderate';
+              finding = `⚠️ HIGH NEUTROPHILS: ${value}% above normal range (40-80%). May indicate bacterial infection or inflammation.`;
+            } else if (value < 40) {
+              isAbnormal = true;
+              severity = 'moderate';
+              finding = `⚠️ LOW NEUTROPHILS: ${value}% below normal range (40-80%). May indicate viral infection or immune system issues.`;
+            } else {
+              finding = `✅ NORMAL: Neutrophils ${value}% within normal range (40-80%).`;
             }
             break;
         }
