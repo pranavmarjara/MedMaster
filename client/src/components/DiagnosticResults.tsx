@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Brain, TrendingUp, Eye, Clock, CheckCircle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Brain, TrendingUp, Eye, Clock, CheckCircle, FileText, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,15 @@ interface Diagnosis {
   severity: "low" | "medium" | "high";
   icd10: string;
 }
+
+// Fetch diagnostic history from API
+const fetchDiagnosticHistory = async () => {
+  const response = await fetch('/api/diagnostic-history?limit=10');
+  if (!response.ok) {
+    throw new Error('Failed to fetch diagnostic history');
+  }
+  return response.json();
+};
 
 // Real diagnosis data will be populated from AI analysis
 const emptyDiagnoses: Diagnosis[] = [];
@@ -34,6 +44,15 @@ const getConfidenceColor = (confidence: number) => {
 export default function DiagnosticResults() {
   const [selectedDiagnosis, setSelectedDiagnosis] = useState<number | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  
+  // Fetch diagnostic history
+  const { data: historyData, isLoading, error, refetch } = useQuery({
+    queryKey: ['diagnostic-history'],
+    queryFn: fetchDiagnosticHistory,
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+  
+  const savedAnalyses = historyData?.analyses || [];
 
   const handleReanalyze = () => {
     setIsAnalyzing(true);
@@ -88,96 +107,89 @@ export default function DiagnosticResults() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {emptyDiagnoses.length === 0 ? (
-              <div className="flex items-center justify-center h-32 text-muted-foreground">
-                <div className="text-center">
-                  <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p>No diagnosis available</p>
-                  <p className="text-sm mt-1">Upload a medical document to start analysis</p>
-                </div>
+          {isLoading ? (
+            <div className="flex items-center justify-center h-32 text-muted-foreground">
+              <div className="text-center">
+                <Brain className="h-8 w-8 mx-auto mb-2 opacity-50 animate-pulse" />
+                <p>Loading diagnostic history...</p>
               </div>
-            ) : (
-              emptyDiagnoses.map((diagnosis, index) => (
-              <Card
-                key={index}
-                className={`transition-all hover-elevate cursor-pointer ${
-                  selectedDiagnosis === index ? "ring-2 ring-primary" : ""
-                }`}
-                onClick={() => toggleDetails(index)}
-                data-testid={`diagnosis-card-${index}`}
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <h3 className="font-semibold text-lg">{diagnosis.condition}</h3>
-                      <Badge 
-                        variant="outline" 
-                        className={getSeverityColor(diagnosis.severity)}
-                        data-testid={`badge-severity-${index}`}
-                      >
-                        {diagnosis.severity.toUpperCase()}
-                      </Badge>
-                      <Badge variant="secondary" data-testid={`badge-icd10-${index}`}>
-                        {diagnosis.icd10}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span 
-                        className={`text-sm font-medium ${getConfidenceColor(diagnosis.confidence)}`}
-                        data-testid={`confidence-${index}`}
-                      >
-                        {diagnosis.confidence}%
-                      </span>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        data-testid={`button-details-${index}`}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <div className="flex justify-between text-sm text-muted-foreground mb-1">
-                      <span>Confidence Level</span>
-                      <span>{diagnosis.confidence}%</span>
-                    </div>
-                    <Progress 
-                      value={diagnosis.confidence} 
-                      className="h-2"
-                      data-testid={`progress-confidence-${index}`}
-                    />
-                  </div>
-
-                  {selectedDiagnosis === index && (
-                    <div className="animate-fade-in">
-                      <div className="border-t pt-3 mt-3">
-                        <h4 className="font-medium mb-2 flex items-center gap-2">
-                          <CheckCircle className="h-4 w-4 text-chart-3" />
-                          Supporting Evidence
-                        </h4>
-                        <ul className="space-y-1">
-                          {diagnosis.evidence.map((evidence, evidenceIndex) => (
-                            <li 
-                              key={evidenceIndex}
-                              className="text-sm text-muted-foreground flex items-center gap-2"
-                              data-testid={`evidence-${index}-${evidenceIndex}`}
-                            >
-                              <div className="h-1.5 w-1.5 bg-primary rounded-full flex-shrink-0" />
-                              {evidence}
-                            </li>
-                          ))}
-                        </ul>
+            </div>
+          ) : savedAnalyses.length === 0 ? (
+            <div className="flex items-center justify-center h-32 text-muted-foreground">
+              <div className="text-center">
+                <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                <p>No analyses available</p>
+                <p className="text-sm mt-1">Upload a medical document to start analysis</p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Recent Medical Analyses</h3>
+                <Badge variant="outline">{savedAnalyses.length} total</Badge>
+              </div>
+              {savedAnalyses.map((analysis: any, index: number) => (
+                <Card
+                  key={analysis.id}
+                  className={`transition-all hover-elevate cursor-pointer ${
+                    selectedDiagnosis === index ? "ring-2 ring-primary" : ""
+                  }`}
+                  onClick={() => toggleDetails(index)}
+                  data-testid={`analysis-card-${index}`}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-5 w-5 text-primary" />
+                        <div>
+                          <h3 className="font-semibold text-lg">{analysis.fileName}</h3>
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {new Date(analysis.createdAt).toLocaleDateString()} at {new Date(analysis.createdAt).toLocaleTimeString()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="secondary">
+                          {analysis.processingTimeMs ? `${(analysis.processingTimeMs / 1000).toFixed(1)}s` : 'Processed'}
+                        </Badge>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          data-testid={`button-details-${index}`}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-              ))
-            )}
-          </div>
+
+                    {selectedDiagnosis === index && (
+                      <div className="animate-fade-in">
+                        <div className="border-t pt-4 mt-3 space-y-4">
+                          <div>
+                            <h4 className="font-medium mb-2 text-primary">Intake Analysis</h4>
+                            <p className="text-sm text-muted-foreground">{analysis.intake}</p>
+                          </div>
+                          <div>
+                            <h4 className="font-medium mb-2 text-primary">Medical Analysis</h4>
+                            <p className="text-sm text-muted-foreground">{analysis.analysis}</p>
+                          </div>
+                          <div>
+                            <h4 className="font-medium mb-2 text-destructive">Triage Assessment</h4>
+                            <p className="text-sm text-muted-foreground">{analysis.triage}</p>
+                          </div>
+                          <div>
+                            <h4 className="font-medium mb-2 text-chart-3">Explanation</h4>
+                            <p className="text-sm text-muted-foreground">{analysis.explanation}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
