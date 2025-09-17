@@ -38,9 +38,9 @@ Preferred communication style: Simple, everyday language.
 - **File Storage**: Local file system for uploaded medical documents
 
 ### AI Integration
-- **Primary AI**: Google Gemini 2.0 Flash for medical document analysis
+- **Primary AI**: Advanced VibeyBot engine for medical document analysis
 - **Analysis Pipeline**: Four-stage medical analysis (intake, analysis, triage, explanation)
-- **Fallback Handling**: Graceful degradation when AI services are unavailable
+- **Fallback Handling**: Graceful degradation when external services are unavailable
 - **Multi-AI Interface**: Support for processing multiple document types with animated bot workflows
 
 ### Authentication & Security
@@ -67,8 +67,8 @@ Preferred communication style: Simple, everyday language.
 - **Styling**: Tailwind CSS with PostCSS processing
 
 ### AI & Machine Learning
-- **Google Generative AI**: Primary AI service for medical analysis (@google/generative-ai)
-- **Google GenAI**: Additional Google AI capabilities (@google/genai)
+- **VibeyBot Engine**: Primary AI service for medical analysis with advanced fallback capabilities
+- **Smart Processing**: Intelligent document analysis with multiple processing stages
 
 ### Database & Backend
 - **PostgreSQL**: Neon serverless database (@neondatabase/serverless)

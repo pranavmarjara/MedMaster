@@ -200,7 +200,7 @@ export default function MultiAI() {
       
       updateBotStatus("why", "completed", 100, "Explanation ready!");
 
-      // Now call the actual Gemini API
+      // Now call the VibeyBot analysis engine
       const response = await fetch('/api/analyze-medical-report', {
         method: 'POST',
         body: formData,
