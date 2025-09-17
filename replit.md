@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a modern web application for VibeyBot-powered medical diagnostic and triage support designed to assist clinicians. The system provides intelligent data synthesis, ranked diagnosis lists with confidence levels, risk stratification, and red-flag alerts for urgent conditions. Built with a focus on explainability and trust, the application features a clean medical dashboard interface with comprehensive patient intake forms, diagnostic analysis, and detailed reporting capabilities.
+This is a modern web application for VibeyBot-powered medical diagnostic and triage support designed to assist clinicians. The system uses an advanced JSON-based medical intelligence brain to provide deterministic data synthesis, ranked diagnosis lists with confidence levels, risk stratification, and red-flag alerts for urgent conditions. Built with a focus on explainability and trust, the application features a clean medical dashboard interface with comprehensive patient intake forms, diagnostic analysis, and detailed reporting capabilities.
 
 ## User Preferences
 
@@ -37,10 +37,11 @@ Preferred communication style: Simple, everyday language.
 - **Schema**: User management with bcrypt password hashing
 - **File Storage**: Local file system for uploaded medical documents
 
-### VibeyBot Integration
-- **Primary AI**: Advanced VibeyBot engine for medical document analysis
-- **Analysis Pipeline**: Four-stage medical analysis (intake, analysis, triage, explanation)
-- **Fallback Handling**: Graceful degradation when external services are unavailable
+### VibeyBot JSON Brain Integration
+- **JSON Intelligence Engine**: Advanced VibeyBot JSON brain for deterministic medical document analysis
+- **Analysis Pipeline**: Four-stage medical analysis (intake, analysis, triage, explanation) using rule-based processing
+- **Medical Rules Database**: Comprehensive JSON ruleset with lab ranges, vital signs, medical terminology, and response templates
+- **Deterministic Processing**: Consistent, reproducible analysis results with simulated confidence scores and processing metrics
 - **Multi-VibeyBot Interface**: Support for processing multiple document types with animated bot workflows
 
 ### Authentication & Security
@@ -66,9 +67,10 @@ Preferred communication style: Simple, everyday language.
 - **UI Components**: Radix UI primitives for accessible component foundation
 - **Styling**: Tailwind CSS with PostCSS processing
 
-### VibeyBot & Machine Learning
-- **VibeyBot Engine**: Primary AI service for medical analysis with advanced fallback capabilities
-- **Smart Processing**: Intelligent document analysis with multiple processing stages
+### VibeyBot JSON Brain System
+- **JSON Medical Brain**: Comprehensive medical rules engine with pattern recognition and decision trees
+- **Rule-Based Processing**: Deterministic medical analysis using structured JSON rulesets and templates
+- **Medical Knowledge Base**: Extensive medical terminology, lab ranges, vital signs, and clinical decision logic
 
 ### Database & Backend
 - **PostgreSQL**: Neon serverless database (@neondatabase/serverless)
@@ -97,4 +99,4 @@ Preferred communication style: Simple, everyday language.
 - **Recharts**: Medical data visualization and charting
 - **Lucide React**: Medical and general iconography
 
-The application is designed to be deployed on Replit with PostgreSQL database provisioning and environment variable configuration for VibeyBot services.
+The application is designed to be deployed on Replit with PostgreSQL database provisioning. The VibeyBot JSON brain operates entirely within the application using local medical rules configuration.

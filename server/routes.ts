@@ -198,10 +198,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.status(500).json({ 
         error: 'Analysis failed',
-        intake: "Document upload successful, but processing encountered an issue.",
-        analysis: "Analysis system experienced technical difficulties. Please try again.", 
-        triage: "Unable to complete automated triage. Recommend manual medical review.",
-        explanation: "The analysis could not be completed due to technical issues. Please consult with a medical professional."
+        intake: "🔬 VibeyBot Processing: Document upload successful, but medical analysis encountered technical difficulties.",
+        analysis: "🧬 VibeyBot Analysis: Medical processing systems experienced temporary issues. Advanced diagnostic protocols suggest retry or professional consultation.", 
+        triage: "🏥 VibeyBot Triage: Automated medical triage temporarily unavailable. Immediate professional medical consultation strongly recommended.",
+        explanation: "💡 VibeyBot Explanation: Medical document processing could not be completed due to technical issues. Please consult with qualified medical professionals for comprehensive evaluation."
       });
     }
   });
