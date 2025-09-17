@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a modern web application for VibeyBot-powered medical diagnostic and triage support designed to assist clinicians. The system uses an advanced JSON-based medical intelligence brain to provide deterministic data synthesis, ranked diagnosis lists with confidence levels, risk stratification, and red-flag alerts for urgent conditions. Built with a focus on explainability and trust, the application features a clean medical dashboard interface with comprehensive patient intake forms, diagnostic analysis, and detailed reporting capabilities.
+This is a modern web application for VibeyBot-powered medical diagnostic and triage support designed to assist clinicians. The system uses an advanced AI medical intelligence engine to provide deterministic data synthesis, ranked diagnosis lists with confidence levels, risk stratification, and red-flag alerts for urgent conditions. Built with a focus on explainability and trust, the application features a clean medical dashboard interface with comprehensive patient intake forms, diagnostic analysis, and detailed reporting capabilities.
 
 ## User Preferences
 
@@ -37,12 +37,12 @@ Preferred communication style: Simple, everyday language.
 - **Schema**: User management with bcrypt password hashing
 - **File Storage**: Local file system for uploaded medical documents
 
-### VibeyBot JSON Brain Integration
-- **JSON Intelligence Engine**: Advanced VibeyBot JSON brain for deterministic medical document analysis
-- **Analysis Pipeline**: Four-stage medical analysis (intake, analysis, triage, explanation) using rule-based processing
-- **Medical Rules Database**: Comprehensive JSON ruleset with lab ranges, vital signs, medical terminology, and response templates
-- **Deterministic Processing**: Consistent, reproducible analysis results with simulated confidence scores and processing metrics
-- **Multi-VibeyBot Interface**: Support for processing multiple document types with animated bot workflows
+### VibeyBot AI Intelligence Integration
+- **AI Intelligence Engine**: Advanced VibeyBot AI system for deterministic medical document analysis
+- **Analysis Pipeline**: Four-stage medical analysis (intake, analysis, triage, explanation) using advanced reasoning algorithms
+- **Medical Knowledge Base**: Comprehensive clinical database with lab ranges, vital signs, medical terminology, and response patterns
+- **Deterministic Processing**: Consistent, reproducible analysis results with AI confidence scores and processing metrics
+- **Multi-VibeyBot Interface**: Support for processing multiple document types with animated AI bot workflows
 
 ### Authentication & Security
 - **Password Security**: bcrypt with 12 salt rounds
@@ -67,9 +67,9 @@ Preferred communication style: Simple, everyday language.
 - **UI Components**: Radix UI primitives for accessible component foundation
 - **Styling**: Tailwind CSS with PostCSS processing
 
-### VibeyBot JSON Brain System
-- **JSON Medical Brain**: Comprehensive medical rules engine with pattern recognition and decision trees
-- **Rule-Based Processing**: Deterministic medical analysis using structured JSON rulesets and templates
+### VibeyBot AI Intelligence System
+- **AI Medical Engine**: Comprehensive medical reasoning system with pattern recognition and decision trees
+- **AI-Driven Processing**: Deterministic medical analysis using advanced algorithms and clinical templates
 - **Medical Knowledge Base**: Extensive medical terminology, lab ranges, vital signs, and clinical decision logic
 
 ### Database & Backend
@@ -99,4 +99,4 @@ Preferred communication style: Simple, everyday language.
 - **Recharts**: Medical data visualization and charting
 - **Lucide React**: Medical and general iconography
 
-The application is designed to be deployed on Replit with PostgreSQL database provisioning. The VibeyBot JSON brain operates entirely within the application using local medical rules configuration.
+The application is designed to be deployed on Replit with PostgreSQL database provisioning. The VibeyBot AI intelligence operates entirely within the application using local medical reasoning algorithms.
