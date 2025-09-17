@@ -1,0 +1,477 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "name": "MedMaster Expanded Hardcoded Rulebook",
+    "disclaimer": "DEMO ONLY \u2014 NOT FOR CLINICAL USE. This rulebook is for hackathon/demo purposes. Do not use for medical decisions."
+  },
+  "units": {
+    "glucose": "mg/dL",
+    "glucose_mmol": "mmol/L",
+    "bp": "mmHg",
+    "hr": "bpm",
+    "spo2": "%",
+    "temp_c": "\u00b0C",
+    "temp_f": "\u00b0F",
+    "bmi": "kg/m^2",
+    "weight_kg": "kg",
+    "height_cm": "cm",
+    "creatinine_mgdl": "mg/dL"
+  },
+  "metrics": {
+    "blood_glucose": {
+      "display": "Blood glucose",
+      "units": "mg/dL",
+      "notes": "Supports numeric inputs in mg/dL or mmol/L (auto-convert: 1 mmol/L = 18 mg/dL). Recognizes keywords: glucose, sugar, bs, fbs, rbs, a1c, hba1c",
+      "thresholds": {
+        "hypoglycemia": {
+          "max": 69
+        },
+        "normal": {
+          "min": 70,
+          "max": 140
+        },
+        "prediabetes": {
+          "min": 141,
+          "max": 200
+        },
+        "diabetes": {
+          "min": 201
+        }
+      },
+      "hba1c_thresholds": {
+        "normal_max": 5.6,
+        "prediabetes_min": 5.7,
+        "prediabetes_max": 6.4,
+        "diabetes_min": 6.5
+      },
+      "responses": {
+        "hypoglycemia": [
+          "Low blood glucose ({value} {unit}). This may cause dizziness, sweating, or fainting \u2014 seek urgent assistance if symptomatic.",
+          "Hypoglycemia detected ({value} {unit}). Recheck and seek immediate help if severe symptoms occur.",
+          "Low sugar level ({value} {unit}). This demo suggests urgent evaluation if symptomatic."
+        ],
+        "normal": [
+          "Blood glucose {value} {unit} \u2014 within expected range.",
+          "{value} {unit} (normal). Maintain regular diet and monitoring."
+        ],
+        "prediabetes": [
+          "Reading {value} {unit} falls in the prediabetes range. Lifestyle changes and clinical follow-up recommended.",
+          "Elevated glucose ({value} {unit}). Consider tracking trends and consulting a clinician."
+        ],
+        "diabetes": [
+          "High glucose {value} {unit} \u2014 diabetic-range. This demo recommends medical consultation urgently.",
+          "Significantly elevated blood sugar ({value} {unit}). Seek clinical evaluation."
+        ]
+      }
+    },
+    "blood_pressure": {
+      "display": "Blood pressure",
+      "units": "mmHg",
+      "notes": "Detects systolic/diastolic pairs like 140/90. Keywords: bp, blood pressure, mmhg.",
+      "thresholds": {
+        "low": {
+          "systolic_max": 89,
+          "diastolic_max": 59
+        },
+        "normal": {
+          "systolic_min": 90,
+          "systolic_max": 120,
+          "diastolic_min": 60,
+          "diastolic_max": 80
+        },
+        "elevated": {
+          "systolic_min": 121,
+          "systolic_max": 139,
+          "diastolic_min": 81,
+          "diastolic_max": 89
+        },
+        "hypertension": {
+          "systolic_min": 140,
+          "diastolic_min": 90
+        }
+      },
+      "responses": {
+        "low": [
+          "Low BP ({systolic}/{diastolic} {unit}) \u2014 may cause faintness. Monitor and seek care if symptomatic.",
+          "Hypotension detected ({systolic}/{diastolic} {unit}). Stay hydrated; seek medical advice if needed."
+        ],
+        "normal": [
+          "Blood pressure {systolic}/{diastolic} {unit} \u2014 within normal limits.",
+          "{systolic}/{diastolic} {unit} (normal). Continue routine monitoring."
+        ],
+        "elevated": [
+          "Elevated BP {systolic}/{diastolic} {unit}. Lifestyle measures advised and recheck regularly.",
+          "Prehypertensive range ({systolic}/{diastolic} {unit}) \u2014 monitor frequently."
+        ],
+        "hypertension": [
+          "Hypertension detected ({systolic}/{diastolic} {unit}). Clinical evaluation recommended.",
+          "High blood pressure ({systolic}/{diastolic} {unit}) \u2014 medical follow-up advised."
+        ]
+      }
+    },
+    "heart_rate": {
+      "display": "Heart rate",
+      "units": "bpm",
+      "notes": "Keywords: heart rate, hr, pulse, bpm",
+      "thresholds": {
+        "bradycardia": {
+          "max": 59
+        },
+        "normal": {
+          "min": 60,
+          "max": 100
+        },
+        "tachycardia": {
+          "min": 101
+        }
+      },
+      "responses": {
+        "bradycardia": [
+          "Heart rate {value} {unit} \u2014 bradycardia. If symptomatic (dizziness, syncope), seek care.",
+          "Low pulse ({value} {unit}). May be normal in athletes; otherwise evaluate clinically."
+        ],
+        "normal": [
+          "Heart rate {value} {unit} \u2014 normal range.",
+          "{value} {unit} (normal). No immediate concern indicated in demo."
+        ],
+        "tachycardia": [
+          "Tachycardia detected ({value} {unit}). Could reflect stress, fever, or arrhythmia \u2014 medical review recommended.",
+          "High pulse ({value} {unit}). Monitor and seek help if symptoms occur."
+        ]
+      }
+    },
+    "spo2": {
+      "display": "Oxygen saturation",
+      "units": "%",
+      "notes": "Recognizes spo2, spO2, o2 sat. Values <90% flagged critical.",
+      "thresholds": {
+        "normal": {
+          "min": 95,
+          "max": 100
+        },
+        "mild_hypoxemia": {
+          "min": 90,
+          "max": 94
+        },
+        "critical": {
+          "max": 89
+        }
+      },
+      "responses": {
+        "normal": [
+          "SpO2 {value}{unit} \u2014 normal oxygenation."
+        ],
+        "mild_hypoxemia": [
+          "SpO2 {value}{unit} \u2014 mild low oxygen saturation. Clinical assessment recommended."
+        ],
+        "critical": [
+          "SpO2 {value}{unit} \u2014 critically low oxygenation. Seek urgent medical care or emergency services."
+        ]
+      }
+    },
+    "temperature": {
+      "display": "Body temperature",
+      "units": "\u00b0C",
+      "notes": "Supports \u00b0C and \u00b0F (auto-convert). Keywords: temp, temperature, fever.",
+      "thresholds": {
+        "hypothermia": {
+          "max": 34.9
+        },
+        "normal": {
+          "min": 36.1,
+          "max": 37.2
+        },
+        "low_grade": {
+          "min": 37.3,
+          "max": 38.0
+        },
+        "fever": {
+          "min": 38.1
+        }
+      },
+      "responses": {
+        "hypothermia": [
+          "Low body temperature ({value}{unit}) \u2014 seek medical care if symptomatic."
+        ],
+        "normal": [
+          "Temperature {value}{unit} \u2014 within normal limits."
+        ],
+        "low_grade": [
+          "Low-grade fever ({value}{unit}). Monitor and hydrate."
+        ],
+        "fever": [
+          "Fever detected ({value}{unit}). Seek clinical advice if persistent or severe."
+        ]
+      }
+    },
+    "bmi": {
+      "display": "Body mass index",
+      "units": "kg/m^2",
+      "notes": "Computed from weight+height; accepts kg/cm or lbs/in (auto-convert).",
+      "thresholds": {
+        "underweight": {
+          "max": 18.49
+        },
+        "normal": {
+          "min": 18.5,
+          "max": 24.9
+        },
+        "overweight": {
+          "min": 25,
+          "max": 29.9
+        },
+        "obese": {
+          "min": 30
+        }
+      },
+      "responses": {
+        "underweight": [
+          "BMI {value} \u2014 underweight range. Nutritional evaluation recommended."
+        ],
+        "normal": [
+          "BMI {value} \u2014 normal range."
+        ],
+        "overweight": [
+          "BMI {value} \u2014 overweight. Lifestyle modifications suggested."
+        ],
+        "obese": [
+          "BMI {value} \u2014 obese range. Medical consultation advised."
+        ]
+      }
+    },
+    "lipids": {
+      "display": "Lipid panel",
+      "notes": "Includes total cholesterol, LDL, HDL, triglycerides. Units mg/dL.",
+      "thresholds": {
+        "total": {
+          "desirable_max": 199,
+          "borderline_min": 200,
+          "borderline_max": 239,
+          "high_min": 240
+        },
+        "ldl": {
+          "optimal_max": 99,
+          "near_optimal_max": 129,
+          "borderline_max": 159,
+          "high_min": 160
+        },
+        "hdl": {
+          "low_men_max": 40,
+          "low_women_max": 50,
+          "protective_min": 60
+        },
+        "triglycerides": {
+          "normal_max": 149,
+          "borderline_max": 199,
+          "high_max": 499,
+          "very_high_min": 500
+        }
+      },
+      "responses": {
+        "normal": [
+          "Lipid values within expected ranges."
+        ],
+        "abnormal": [
+          "Lipid panel shows abnormalities; lipid-lowering lifestyle measures and clinical review recommended."
+        ]
+      }
+    },
+    "renal": {
+      "display": "Renal function",
+      "notes": "Creatinine (mg/dL), BUN; include eGFR calculation if age/sex provided. Keywords: creatinine, bun, egfr.",
+      "thresholds": {
+        "creatinine": {
+          "male_max": 1.3,
+          "female_max": 1.1
+        },
+        "egfr": {
+          "normal_min": 90,
+          "mild_ckd_min": 60,
+          "moderate_ckd_min": 30,
+          "severe_ckd_min": 15
+        }
+      },
+      "responses": {
+        "abnormal": [
+          "Renal marker abnormal \u2014 clinical correlation required. Consult a clinician for kidney assessment."
+        ]
+      }
+    },
+    "liver": {
+      "display": "Liver function tests",
+      "notes": "ALT, AST, ALP, bilirubin ranges; detect elevated enzymes.",
+      "responses": {
+        "abnormal": [
+          "Liver function markers are abnormal; follow-up testing and medical review recommended."
+        ]
+      }
+    },
+    "cbc": {
+      "display": "Complete blood count",
+      "notes": "Hemoglobin, WBC, platelet counts; detect anemia, leukocytosis, thrombocytopenia.",
+      "responses": {
+        "anemia": [
+          "Low hemoglobin detected \u2014 consider evaluation for anemia."
+        ],
+        "leukocytosis": [
+          "Elevated WBC \u2014 possible infection or inflammation; clinical correlation needed."
+        ]
+      }
+    },
+    "thyroid": {
+      "display": "Thyroid function",
+      "notes": "TSH, free T4 ranges; detect hypo/hyperthyroid patterns.",
+      "responses": {
+        "abnormal": [
+          "Thyroid function abnormal \u2014 endocrine follow-up recommended."
+        ]
+      }
+    },
+    "inflammatory": {
+      "display": "Inflammatory markers",
+      "notes": "CRP, ESR \u2014 elevated values suggest inflammation/infection.",
+      "responses": {
+        "elevated": [
+          "Inflammatory marker elevated \u2014 could indicate infection or inflammatory condition; clinical correlation needed."
+        ]
+      }
+    }
+  },
+  "parsing": {
+    "preprocess_steps": [
+      "lowercase normalization",
+      "unicode NFKC normalization",
+      "unit shorthand expansions (mgdl -> mg/dL, mmol -> mmol/L, bpm, mmhg, etc.)",
+      "tokenize while preserving 'number/number' patterns (e.g., 120/80)"
+    ],
+    "regex_patterns": {
+      "bp_pair": "(?P<systolic>\\d{2,3})\\s*[\\/]\\s*(?P<diastolic>\\d{2,3})",
+      "number_unit": "(?P<value>\\d{1,3}(?:\\.\\d+)?)(?:\\s*(?P<unit>mg\\/?dl|mmol\\/?l|bpm|mmhg|%|\u00b0c|\u00b0f|kg|cm|m|lbs|in))?"
+    },
+    "ambiguous_value_rule": "If glucose numeric <30 assume mmol/L and convert to mg/dL by *18; else assume mg/dL. If multiple numbers, choose nearest to keyword."
+  },
+  "composite_rules": [
+    {
+      "name": "metabolic_risk",
+      "trigger": [
+        "blood_glucose:diabetes",
+        "blood_pressure:hypertension",
+        "bmi:obese"
+      ],
+      "logic": "if at least two of the listed triggers present then flag metabolic risk",
+      "responses": [
+        "Multiple metabolic risk factors detected (glucose/BP/BMI). Recommend medical review for cardiometabolic risk.",
+        "Findings suggest metabolic syndrome risk \u2014 lifestyle and clinical evaluation advised."
+      ]
+    },
+    {
+      "name": "sepsis_hint",
+      "trigger": [
+        "temperature:fever",
+        "cbc:leukocytosis",
+        "spo2:critical"
+      ],
+      "logic": "if fever + high WBC + low SpO2 -> flag possible severe infection",
+      "responses": [
+        "Signs consistent with possible severe infection (fever, high WBC, low oxygen). Urgent medical assessment recommended.",
+        "Combination of fever, leukocytosis, and low SpO2 \u2014 seek emergency care."
+      ]
+    },
+    {
+      "name": "cardio_stress",
+      "trigger": [
+        "heart_rate:tachycardia",
+        "blood_pressure:hypertension",
+        "spo2:mild_hypoxemia"
+      ],
+      "logic": "if heart rate high AND BP high AND SpO2 low then flag cardio-respiratory stress",
+      "responses": [
+        "Cardiorespiratory stress pattern detected. Clinical evaluation recommended urgently.",
+        "Combined abnormalities in HR, BP, and oxygenation \u2014 seek immediate care."
+      ]
+    }
+  ],
+  "red_flags": {
+    "immediate_urgent": [
+      {
+        "condition": "spo2 < 90%",
+        "message": "SpO2 below 90% \u2014 seek emergency care or call local emergency services."
+      },
+      {
+        "condition": "blood_glucose < 50 mg/dL",
+        "message": "Severe hypoglycemia \u2014 immediate assistance required."
+      },
+      {
+        "condition": "systolic >= 180 or diastolic >= 120",
+        "message": "Hypertensive crisis \u2014 seek emergency care immediately."
+      },
+      {
+        "condition": "temperature >= 40\u00b0C",
+        "message": "Very high fever \u2014 seek urgent medical attention."
+      },
+      {
+        "condition": "signs_of_stroke_like_symptoms",
+        "message": "If sudden weakness, slurred speech, or facial droop \u2014 call emergency services immediately."
+      }
+    ],
+    "non_immediate": [
+      {
+        "condition": "new_unexplained_weight_loss",
+        "message": "Unexplained weight loss \u2014 schedule medical evaluation."
+      },
+      {
+        "condition": "persistent_chest_pain",
+        "message": "Persistent chest pain \u2014 seek urgent care."
+      }
+    ]
+  },
+  "confidence_scoring": {
+    "base": 0.4,
+    "rules": [
+      {
+        "if": "numeric_value_extracted",
+        "add": 0.2
+      },
+      {
+        "if": "unit_present",
+        "add": 0.1
+      },
+      {
+        "if": "multiple_correlated_metrics",
+        "add": 0.2
+      },
+      {
+        "if": "ambiguous_terms_present",
+        "add": -0.2
+      }
+    ],
+    "clip": [
+      0.0,
+      1.0
+    ]
+  },
+  "response_templates": {
+    "fallback": [
+      "I couldn't find clear numeric values \u2014 could you paste the report values or specify units?",
+      "I'm missing clear measurements to analyze; please provide numbers (e.g., 'BP 140/90', 'Glucose 180 mg/dL')."
+    ],
+    "disclaimer": [
+      "This tool is a demo only and not for clinical use. For medical advice, consult a healthcare professional."
+    ]
+  },
+  "session_memory": {
+    "keep_last_n_messages": 10,
+    "store_latest_metrics_only": true,
+    "memory_schema_example": {
+      "session_id": "<uuid>",
+      "created_at": "2025-09-17T12:00:00Z",
+      "latest_metrics": {
+        "blood_glucose": {
+          "value": 230,
+          "unit": "mg/dL",
+          "ts": "..."
+        }
+      }
+    }
+  }
+}
