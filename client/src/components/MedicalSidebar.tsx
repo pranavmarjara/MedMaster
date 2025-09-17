@@ -23,6 +23,12 @@ import {
 
 const menuItems = [
   {
+    title: "Multi AI Diagnostic",
+    url: "/multi-ai",
+    icon: Bot,
+    isHighlight: true,
+  },
+  {
     title: "Dashboard",
     url: "/",
     icon: Stethoscope,
@@ -51,11 +57,6 @@ const menuItems = [
     title: "Reports",
     url: "/reports",
     icon: FileText,
-  },
-  {
-    title: "Multi AI Diagnostic",
-    url: "/multi-ai",
-    icon: Bot,
   },
 ];
 
@@ -89,10 +90,12 @@ export default function MedicalSidebar() {
                   <SidebarMenuButton 
                     asChild
                     isActive={location === item.url}
+                    size={item.isHighlight ? "lg" : "default"}
                     data-testid={`nav-${item.title.toLowerCase().replace(' ', '-')}`}
+                    className={item.isHighlight ? "bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-semibold shadow-lg border border-yellow-300" : ""}
                   >
                     <Link href={item.url}>
-                      <item.icon className="h-4 w-4" />
+                      <item.icon className={item.isHighlight ? "h-6 w-6" : "h-4 w-4"} />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
