@@ -17,7 +17,7 @@ import Settings from "@/pages/Settings";
 import Explainability from "@/pages/Explainability";
 import VibeyDiagnostic from "@/pages/VibeyDiagnostic";
 import NotFound from "@/pages/not-found";
-import { Stethoscope } from "lucide-react";
+import { Stethoscope, AlertCircle } from "lucide-react";
 
 function Router() {
   return (
@@ -65,6 +65,14 @@ VibeyBot Diagnostic Assistant
                   <ThemeToggle />
                 </div>
               </header>
+              
+              {/* Medical Disclaimer Banner */}
+              <div className="bg-amber-50 border-b border-amber-200 px-4 py-2">
+                <div className="flex items-center justify-center gap-2 text-amber-800 text-sm">
+                  <AlertCircle className="h-4 w-4" />
+                  <span className="font-medium">Demo / Educational Tool — Not for Clinical Use</span>
+                </div>
+              </div>
               <main className="flex-1 overflow-auto p-6 bg-background">
                 <div className="animate-fade-in">
                   <Router />
