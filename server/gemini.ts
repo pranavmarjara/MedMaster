@@ -49,16 +49,6 @@ function chunkContent(content: string, maxTokens: number = 200000): string[] {
 }
 
 export async function analyzeMedicalReport(fileContent: string, fileName: string, mimeType: string): Promise<MedicalAnalysisResult> {
-  // Demo hardcoded response for Sterling Accuris pathology report
-  if (fileName.includes('sterling-accuris') || fileContent.includes('Lyubochka Svetka') || fileContent.includes('02232160XXXX')) {
-    return {
-      intake: "Comprehensive pathology report processed for 41-year-old male patient. Complete blood count, differential, lipid profile, and blood grouping analysis completed. Key parameters extracted: WBC 10,570/cmm, Hemoglobin 14.5g/dL, Platelets 150,000/cmm, Cholesterol 189mg/dL.",
-      analysis: "Analysis reveals mild leukocytosis (WBC: 10,570, ref: 4000-10000) suggesting possible early inflammatory response. Elevated MPV (14.00, ref: 7.5-10.3) indicates platelet activation. Lymphocyte percentage at lower normal range (19%). Hemoglobin, RBC morphology, and lipid profile within normal limits. Blood group A positive confirmed.",
-      triage: "Low-moderate priority. Elevated white cell count warrants clinical correlation but not emergency intervention. Recommend follow-up with primary care physician within 1-2 weeks to assess for underlying infection or inflammatory condition. Monitor symptoms and repeat CBC if persistent elevation.",
-      explanation: "Your blood work shows most values in the normal range, which is good news. However, your white blood cell count is slightly elevated, which often indicates your body is fighting off an infection or dealing with some inflammation. This isn't immediately dangerous but should be monitored. Your cholesterol and other heart-related markers look excellent. Schedule a follow-up with your doctor to discuss the elevated white cells and any symptoms you might be experiencing."
-    };
-  }
-
   // Validate API key at runtime
   if (!process.env.GEMINI_API_KEY) {
     console.error('GEMINI_API_KEY not configured - using fallback analysis');
