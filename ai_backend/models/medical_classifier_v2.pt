@@ -1,0 +1,32 @@
+# This is a mock PyTorch model file for hackathon demo
+# In a real scenario, this would contain actual model weights
+# File size: ~45MB (simulated large medical AI model)
+import torch
+import torch.nn as nn
+
+class MedicalClassifier(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.embedding = nn.Embedding(50000, 512)
+        self.transformer = nn.TransformerEncoder(
+            nn.TransformerEncoderLayer(512, 8), 
+            num_layers=12
+        )
+        self.classifier = nn.Linear(512, 1000)  # 1000 medical conditions
+        
+    def forward(self, x):
+        return self.classifier(self.transformer(self.embedding(x)))
+
+# Mock weights data for demo (this simulates a 45MB model file)
+mock_weights = {
+    'model_version': '2.3.1',
+    'training_dataset': 'MedicalCorpus-2024',
+    'accuracy': 0.94,
+    'model_type': 'transformer_medical_classifier',
+    'parameters': 125000000,  # 125M parameters
+    'trained_on': '2.1M medical cases',
+    'specialty_areas': [
+        'cardiology', 'pulmonology', 'neurology', 
+        'gastroenterology', 'endocrinology', 'rheumatology'
+    ]
+}

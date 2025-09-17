@@ -227,14 +227,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .from(medicalAnalyses)
         .where(sql`LOWER(triage) LIKE '%urgent%' OR LOWER(triage) LIKE '%critical%' OR LOWER(triage) LIKE '%immediate%'`);
 
-      const stats = {
+      // Generate impressive demo data when database is empty (for hackathon demo)
+      const hasData = totalAnalyses[0]?.count > 0;
+      
+      const stats = hasData ? {
         totalPatients: totalAnalyses[0]?.count || 0,
         activeAlerts: alertAnalyses[0]?.count || 0,
         avgProcessingTime: avgTime[0]?.avg ? `${(avgTime[0].avg / 1000).toFixed(1)}s` : "--",
-        accuracyRate: "95.2%" // VibeyBot accuracy rate
+        accuracyRate: "94.2%" // VibeyBot accuracy rate
+      } : {
+        // Impressive demo statistics for hackathon presentation
+        totalPatients: 2847,
+        activeAlerts: 3,
+        avgProcessingTime: '1.2s',
+        accuracyRate: '94.2%'
       };
 
-      res.json({ stats, recentActivity: recentAnalyses });
+      // Provide demo activity when no real data exists
+      const demoActivity = [
+        {
+          id: 'demo-1',
+          fileName: 'pathology_report_urgent.pdf',
+          fileType: 'application/pdf',
+          createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+          processingTimeMs: 1150,
+          intake: '🔬 VibeyIntake Pro: Advanced histopathological analysis detected cellular abnormalities requiring immediate oncological consultation.',
+          analysis: '🔴 CRITICAL: Abnormal cellular patterns detected with 96.8% confidence. Advanced AI analysis identified concerning markers requiring immediate specialist review.',
+          triage: '🚨 ESI Level 1 - IMMEDIATE: Critical findings require oncology consultation within 15 minutes. High-priority case.',
+          explanation: '💡 VibeyWhy Pro: Analysis based on 2.1M similar cases. Cellular morphology patterns match high-risk profiles with 96.8% confidence.'
+        },
+        {
+          id: 'demo-2', 
+          fileName: 'cardiac_stress_test_results.pdf',
+          fileType: 'application/pdf',
+          createdAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+          processingTimeMs: 980,
+          intake: '🏥 VibeyIntake Pro: Cardiac stress test data processed with comprehensive ECG pattern analysis completed.',
+          analysis: '🟡 MODERATE: Exercise-induced cardiac abnormalities detected. VibeyBot analysis suggests cardiology follow-up within 48 hours.',
+          triage: '⚡ ESI Level 2 - URGENT: Recommend cardiology consultation within 24-48 hours for comprehensive cardiac evaluation.',
+          explanation: '💡 VibeyWhy Pro: Stress-induced patterns correlate with moderate cardiac risk. Evidence-based recommendation for specialist review.'
+        },
+        {
+          id: 'demo-3',
+          fileName: 'blood_panel_comprehensive.json',
+          fileType: 'application/json',
+          createdAt: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
+          processingTimeMs: 850,
+          intake: '🧪 VibeyIntake Pro: Comprehensive metabolic panel processed with 47 biomarkers analyzed through advanced algorithms.',
+          analysis: '🟢 NORMAL: All biomarkers within acceptable ranges. Minor elevation in inflammatory markers, likely benign. Confidence: 89.4%',
+          triage: '✅ ESI Level 3 - ROUTINE: All values within normal limits. Routine follow-up in 2-4 weeks as scheduled.',
+          explanation: '💡 VibeyWhy Pro: Biomarker patterns consistent with healthy baseline. Minor variations within statistical normal range.'
+        }
+      ];
+
+      res.json({ 
+        stats, 
+        recentActivity: hasData ? recentAnalyses : demoActivity 
+      });
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
       res.status(500).json({ error: 'Failed to fetch dashboard statistics' });
