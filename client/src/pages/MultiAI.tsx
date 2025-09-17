@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -18,8 +19,10 @@ import {
   Activity,
   MessageSquare,
   Lightbulb,
+  Eye,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "wouter";
 
 interface VibeyBot {
   id: string;
@@ -45,6 +48,7 @@ export default function MultiAI() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [errorAlert, setErrorAlert] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   
   const [bots, setBots] = useState<VibeyBot[]>([
     {
@@ -214,10 +218,18 @@ export default function MultiAI() {
           status: "error",
           message: "Analysis completed with limitations - results may be partial"
         })));
+        
+        // Refresh data even for fallback results since they may be saved to database
+        queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
+        queryClient.invalidateQueries({ queryKey: ['diagnostic-history'] });
         return;
       }
 
       setAnalysisResult(result);
+      
+      // Immediately refresh dashboard and diagnostic history data
+      queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['diagnostic-history'] });
 
     } catch (error) {
       console.error('Error processing file:', error);
@@ -481,6 +493,37 @@ export default function MultiAI() {
                   <p className="text-sm">{analysisResult.explanation}</p>
                 </CardContent>
               </Card>
+            </div>
+            
+            {/* Action buttons after analysis */}
+            <div className="flex justify-center gap-4 mt-6">
+              <Link href="/diagnostics">
+                <Button className="hover-elevate">
+                  <Eye className="h-4 w-4 mr-2" />
+                  View All Saved Results
+                </Button>
+              </Link>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setFile(null);
+                  setAnalysisResult(null);
+                  setErrorAlert(null);
+                  setBots(prev => prev.map(bot => ({
+                    ...bot,
+                    status: "idle",
+                    progress: 0,
+                    message: bot.id === "intake" ? "Ready to process your medical report" :
+                            bot.id === "analysis" ? "Waiting for processed data from VibeyIntake" :
+                            bot.id === "triage" ? "Standby for triage assessment" :
+                            "Ready to explain the diagnostic process"
+                  })));
+                }}
+                className="hover-elevate"
+              >
+                <FileCheck className="h-4 w-4 mr-2" />
+                Analyze Another Document
+              </Button>
             </div>
           </motion.div>
         )}

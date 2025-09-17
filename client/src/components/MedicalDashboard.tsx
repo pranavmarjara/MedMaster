@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
-import { Activity, Users, Clock, TrendingUp, Brain, AlertTriangle } from "lucide-react";
+import { Activity, Users, Clock, TrendingUp, Brain, AlertTriangle, FileText, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 // Fetch real dashboard data from API
 const fetchDashboardStats = async () => {
@@ -198,27 +200,70 @@ export default function MedicalDashboard() {
               </div>
             </div>
           ) : (
-            <div className="space-y-3">
-              {recentActivity.slice(0, 5).map((analysis: any, index: number) => (
-                <div key={analysis.id} className="flex items-center justify-between p-3 rounded-lg border">
-                  <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 bg-primary rounded-full" />
-                    <div>
-                      <p className="font-medium text-sm">{analysis.fileName}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {new Date(analysis.createdAt).toLocaleDateString()}
-                      </p>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold">Recent Diagnoses</h3>
+                <Link href="/diagnostics">
+                  <Button variant="outline" size="sm" className="hover-elevate">
+                    <Eye className="h-4 w-4 mr-2" />
+                    View All Results
+                  </Button>
+                </Link>
+              </div>
+              {recentActivity.slice(0, 3).map((analysis: any, index: number) => (
+                <Card key={analysis.id} className="hover-elevate transition-all">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <FileText className="h-5 w-5 text-primary" />
+                        <div>
+                          <p className="font-semibold text-sm">{analysis.fileName}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(analysis.createdAt).toLocaleDateString()} at {new Date(analysis.createdAt).toLocaleTimeString()}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="text-xs">
+                        {analysis.processingTimeMs ? `${(analysis.processingTimeMs / 1000).toFixed(1)}s` : 'Processed'}
+                      </Badge>
                     </div>
-                  </div>
-                  <Badge variant="outline" className="text-xs">
-                    {analysis.processingTimeMs ? `${(analysis.processingTimeMs / 1000).toFixed(1)}s` : 'Processed'}
-                  </Badge>
-                </div>
+                    
+                    <div className="space-y-2 text-sm">
+                      {analysis.triage && (
+                        <div>
+                          <span className="font-medium text-red-600">Triage: </span>
+                          <span className="text-muted-foreground">
+                            {analysis.triage.length > 100 ? `${analysis.triage.substring(0, 100)}...` : analysis.triage}
+                          </span>
+                        </div>
+                      )}
+                      {analysis.analysis && (
+                        <div>
+                          <span className="font-medium text-purple-600">Analysis: </span>
+                          <span className="text-muted-foreground">
+                            {analysis.analysis.length > 100 ? `${analysis.analysis.substring(0, 100)}...` : analysis.analysis}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <Link href="/diagnostics">
+                      <Button variant="ghost" size="sm" className="mt-3 text-xs">
+                        <Eye className="h-3 w-3 mr-1" />
+                        View Full Results
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
               ))}
-              {recentActivity.length > 5 && (
-                <p className="text-xs text-muted-foreground text-center pt-2">
-                  And {recentActivity.length - 5} more analyses...
-                </p>
+              {recentActivity.length > 3 && (
+                <div className="text-center pt-2">
+                  <Link href="/diagnostics">
+                    <Button variant="outline" size="sm">
+                      View {recentActivity.length - 3} More Diagnoses
+                    </Button>
+                  </Link>
+                </div>
               )}
             </div>
           )}
