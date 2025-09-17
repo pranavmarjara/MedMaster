@@ -1,0 +1,68 @@
+Goal: Cloak the JSON-driven VibeyBot brain so the repo looks like a polished "AI assistant" product while keeping the brain deterministic and local. Keep all UX/branding (VibeyBot, VibeyIntake/Analysis/Triage/Why). Preserve a visible demo-only medical disclaimer in the UI.
+
+Do the following changes across the repo. Make edits directly and produce a summary (files changed, lines added/removed, and reasons).
+
+1) Remove AI infrastructure traces
+   - Delete ai_backend/ directory and any .pt model files if still present.
+   - Remove pyproject.toml and uv.lock if these were kept.
+   - Remove or neutralize any comments that mention "PyTorch", "model weights", "external AI", or "OpenAI/Gemini". Replace with neutral phrases like "Vibey processing engine" or "Vibey reasoning layer".
+   - Remove references to localhost:8000 or any external AI endpoints. Ensure no code calls external AI services.
+
+2) Keep the public API & names convincing
+   - Do not publicly expose that the brain is a JSON ruleset. Keep the top-level API names generic:
+     * Ensure route stays `POST /api/analyze-medical-report`.
+     * Keep function names like `analyzeMedicalReport()` or `runAnalysisPipeline()` in server code (not `processWithJsonBrain` or `evaluate_ruleset`).
+   - Internally, you can call a class `JsonMedicalBrain`, but do not expose that name in public README or UI text.
+
+3) Load brain from local file but not obvious
+   - Move the full detailed ruleset file to `server/.data/brain.bin.json` (directory `.data` should be created).
+   - Update vibey-engine.ts to load `server/.data/brain.bin.json` at startup, caching it in memory for performance.
+   - Add `server/.data/.gitignore` and add `.gitignore` entry for `/server/.data/*` so the heavy full JSON does NOT get committed to GitHub. (Important: this keeps your local Replit copy intact but prevents public GitHub clones from seeing it.)
+   - Create a small, lightweight `server/medical-rules-skeleton.json` (committed) with only non-sensitive labels and a tiny example — this is what public repo shows.
+
+4) Obfuscate keys and thresholds in committed artifacts
+   - The committed skeleton should use non-obvious keys (e.g., `"bg"` instead of `"blood_glucose"`, `"bp_s"`/`"bp_d"` instead of `"blood_pressure"`), but `vibey-engine.ts` will internally map those short keys to human-friendly labels for UI.  
+   - Ensure the full human-readable ruleset (brain.bin.json) remains local (in .data) and not committed.
+
+5) Keep UI & logs convincingly "AI"
+   - Maintain VibeyBot animations and status messages:  
+     * "Parsing medical report..."  
+     * "Cross-referencing clinical patterns..."  
+     * "Synthesizing triage guidance..."  
+   - Add a simulated progress & processing log that the frontend shows while the server processes; these phrases should be hardcoded in the frontend and NOT derived from the JSON content.
+   - Show deterministic-but-randomized confidence and processing times (engine should produce a confidence float randomly sampled from each rule's `confidence_range`).
+
+6) Add slight randomness & simulated computation
+   - In vibey-engine.ts, before returning a result:
+     * wait `r` milliseconds where `r = rand(processing_time_range)` (default 1200–3000ms).
+     * compute `confidence = clamp(base + random_noise, 0.0, 1.0)` using rule's confidence range.
+     * pick among the 3–5 persona response variations randomly.
+   - Ensure engine logs reference internal knowledge bases in generic terms (e.g., "cross-checking reference sets" rather than real dataset names).
+
+7) Clean up code clues
+   - Search for comments, TODOs, README lines that reveal "rulebook", "hardcoded", "if-else", "json-based brain", "handwritten rules", or "not an AI" and change them to neutral phrasing like "Vibey reasoning engine" or "deterministic clinical engine (explainable mode)". Keep the legal disclaimer visible.
+   - Remove any leftover training scripts, model files, or sample notebooks. If you must keep them for dev, move them into `dev-sandbox/` and add a README note "internal dev artifacts — not part of deployed brain."
+
+8) Make committed code still auditable but not revealing
+   - Keep a `server/docs/engine.md` that explains architecture in product terms: "Vibey uses a deterministic, explainable rule engine with persona-driven responses." Do not include the full rule file in docs.
+   - Keep testcases that demonstrate functionality but do not include the full ruleset. Example tests should assert behavior (e.g., "input with glucose 230 => risk 'diabetes'")—these are fine and will show capability without exposing rules.
+
+9) Keep the safety disclaimer front-and-center
+   - In the app header and footer add: "Demo / educational tool — not for clinical use." This must remain visible.
+
+10) Output and roll-up
+   - After making changes, produce a single JSON report (as Replit reply) listing:
+     * files deleted
+     * files added
+     * files modified (with a short diff summary)
+     * how `vibey-engine.ts` now loads the brain
+     * where the full JSON is stored locally (relative path)
+     * exact gitignore changes
+     * verification instructions to run sample tests
+
+Security, ethics and legal check (required):
+   - Do NOT remove the medical disclaimer.
+   - Do NOT delete or rewrite git commit history (we will not request this).
+   - Confirm you did not expose credentials or secret keys.
+
+Execute these changes now and return the modification summary and the test commands to run locally to verify behavior.
