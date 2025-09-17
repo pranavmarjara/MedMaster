@@ -133,8 +133,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Handle different file types
       if (mimeType.startsWith('image/')) {
-        // Analyze images with vision model
-        analysisResult = await analyzeImageReport(filePath);
+        // Analyze images with real OCR
+        analysisResult = await analyzeImageReport(filePath, originalName, mimeType);
       } else {
         // For text-based documents, read content
         let fileContent = '';
