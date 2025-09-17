@@ -1,8 +1,8 @@
-# AI-Powered Diagnostic & Triage Assistant
+# VibeyBot Diagnostic & Triage Assistant
 
 ## Overview
 
-This is a modern web application for AI-powered medical diagnostic and triage support designed to assist clinicians. The system provides intelligent data synthesis, ranked diagnosis lists with confidence levels, risk stratification, and red-flag alerts for urgent conditions. Built with a focus on explainability and trust, the application features a clean medical dashboard interface with comprehensive patient intake forms, diagnostic analysis, and detailed reporting capabilities.
+This is a modern web application for VibeyBot-powered medical diagnostic and triage support designed to assist clinicians. The system provides intelligent data synthesis, ranked diagnosis lists with confidence levels, risk stratification, and red-flag alerts for urgent conditions. Built with a focus on explainability and trust, the application features a clean medical dashboard interface with comprehensive patient intake forms, diagnostic analysis, and detailed reporting capabilities.
 
 ## User Preferences
 
@@ -37,11 +37,11 @@ Preferred communication style: Simple, everyday language.
 - **Schema**: User management with bcrypt password hashing
 - **File Storage**: Local file system for uploaded medical documents
 
-### AI Integration
+### VibeyBot Integration
 - **Primary AI**: Advanced VibeyBot engine for medical document analysis
 - **Analysis Pipeline**: Four-stage medical analysis (intake, analysis, triage, explanation)
 - **Fallback Handling**: Graceful degradation when external services are unavailable
-- **Multi-AI Interface**: Support for processing multiple document types with animated bot workflows
+- **Multi-VibeyBot Interface**: Support for processing multiple document types with animated bot workflows
 
 ### Authentication & Security
 - **Password Security**: bcrypt with 12 salt rounds
@@ -52,10 +52,10 @@ Preferred communication style: Simple, everyday language.
 
 ### Key Features
 - **Patient Intake**: Multi-step forms for comprehensive patient data collection
-- **Diagnostic Analysis**: AI-powered diagnosis ranking with confidence levels and evidence mapping
+- **Diagnostic Analysis**: VibeyBot-powered diagnosis ranking with confidence levels and evidence mapping
 - **Risk Assessment**: Automated risk stratification with visual indicators
 - **Alert System**: Red-flag detection for urgent medical conditions
-- **Explainability**: Transparent AI decision-making with reasoning steps
+- **Explainability**: Transparent VibeyBot decision-making with reasoning steps
 - **Medical Dashboard**: Real-time statistics, trends, and recent activity monitoring
 - **Document Processing**: Support for various medical document formats
 
@@ -66,7 +66,7 @@ Preferred communication style: Simple, everyday language.
 - **UI Components**: Radix UI primitives for accessible component foundation
 - **Styling**: Tailwind CSS with PostCSS processing
 
-### AI & Machine Learning
+### VibeyBot & Machine Learning
 - **VibeyBot Engine**: Primary AI service for medical analysis with advanced fallback capabilities
 - **Smart Processing**: Intelligent document analysis with multiple processing stages
 
@@ -97,4 +97,4 @@ Preferred communication style: Simple, everyday language.
 - **Recharts**: Medical data visualization and charting
 - **Lucide React**: Medical and general iconography
 
-The application is designed to be deployed on Replit with PostgreSQL database provisioning and environment variable configuration for AI services.
+The application is designed to be deployed on Replit with PostgreSQL database provisioning and environment variable configuration for VibeyBot services.

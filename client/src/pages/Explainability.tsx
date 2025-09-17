@@ -1,5 +1,5 @@
-import AIExplainability from "@/components/AIExplainability";
+import VibeyExplainability from "@/components/VibeyExplainability";
 
 export default function Explainability() {
-  return <AIExplainability />;
+  return <VibeyExplainability />;
 }

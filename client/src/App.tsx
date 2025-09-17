@@ -15,7 +15,7 @@ import Reports from "@/pages/Reports";
 import Patients from "@/pages/Patients";
 import Settings from "@/pages/Settings";
 import Explainability from "@/pages/Explainability";
-import MultiAI from "@/pages/MultiAI";
+import VibeyDiagnostic from "@/pages/VibeyDiagnostic";
 import NotFound from "@/pages/not-found";
 import { Stethoscope } from "lucide-react";
 
@@ -31,7 +31,7 @@ function Router() {
       <Route path="/patients" component={Patients} />
       <Route path="/settings" component={Settings} />
       <Route path="/explainability" component={Explainability} />
-      <Route path="/multi-ai" component={MultiAI} />
+      <Route path="/vibey-diagnostic" component={VibeyDiagnostic} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -55,12 +55,12 @@ function App() {
                   <SidebarTrigger data-testid="button-sidebar-toggle" />
                   <div className="flex items-center gap-2">
                     <Stethoscope className="h-6 w-6 text-primary" />
-                    <h1 className="text-xl font-semibold text-primary">MedAI Triage</h1>
+                    <h1 className="text-xl font-semibold text-primary">VibeyMed Triage</h1>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="text-sm text-muted-foreground hidden sm:block">
-                    AI-Powered Diagnostic Assistant
+VibeyBot Diagnostic Assistant
                   </div>
                   <ThemeToggle />
                 </div>

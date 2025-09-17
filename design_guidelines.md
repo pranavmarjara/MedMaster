@@ -1,4 +1,4 @@
-# AI-Powered Diagnostic & Triage Assistant - Design Guidelines
+# VibeyBot Diagnostic & Triage Assistant - Design Guidelines
 
 ## Design Approach
 **System-Based Approach** using **Material Design** principles adapted for medical applications, emphasizing clear information hierarchy, trust-building elements, and clinical workflow optimization.
@@ -54,7 +54,7 @@
 
 ### E. Animations
 **Minimal, Purposeful Animations:**
-- Loading states: Subtle pulse effect for AI processing
+- Loading states: Subtle pulse effect for VibeyBot processing
 - Form validation: Smooth color transitions for feedback
 - Alert animations: Gentle glow for critical alerts
 - Page transitions: Slide effects between workflow steps
@@ -64,7 +64,7 @@
 
 **Trust Elements:**
 - Professional color scheme avoiding playful elements
-- Clear confidence indicators for AI recommendations
+- Clear confidence indicators for VibeyBot recommendations
 - Prominent disclaimers and human oversight reminders
 - Evidence-based reasoning displays
 
@@ -78,7 +78,7 @@
 - High contrast ratios for clinical readability
 - Structured layouts mimicking medical forms
 - Color-coded risk stratification
-- Clear separation between patient data and AI analysis
+- Clear separation between patient data and VibeyBot analysis
 
 ## Images
 No large hero images required. Focus on:

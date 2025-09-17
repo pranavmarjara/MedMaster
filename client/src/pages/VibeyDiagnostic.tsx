@@ -43,7 +43,7 @@ interface AnalysisResult {
   explanation: string;
 }
 
-export default function MultiAI() {
+export default function VibeyDiagnostic() {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
@@ -286,10 +286,10 @@ export default function MultiAI() {
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3 mb-6">
           <Bot className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl font-bold text-primary">Multi AI Diagnostic</h1>
+          <h1 className="text-3xl font-bold text-primary">VibeyBot Diagnostic</h1>
         </div>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Upload your medical reports and watch our specialized AI agents work together to provide comprehensive analysis
+          Upload your medical reports and watch our specialized VibeyBots work together to provide comprehensive analysis
         </p>
       </div>
 

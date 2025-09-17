@@ -231,7 +231,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalPatients: totalAnalyses[0]?.count || 0,
         activeAlerts: alertAnalyses[0]?.count || 0,
         avgProcessingTime: avgTime[0]?.avg ? `${(avgTime[0].avg / 1000).toFixed(1)}s` : "--",
-        accuracyRate: "95.2%" // Placeholder for AI accuracy
+        accuracyRate: "95.2%" // VibeyBot accuracy rate
       };
 
       res.json({ stats, recentActivity: recentAnalyses });

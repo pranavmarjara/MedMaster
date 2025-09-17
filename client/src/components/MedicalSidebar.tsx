@@ -23,8 +23,8 @@ import {
 
 const menuItems = [
   {
-    title: "Multi AI Diagnostic",
-    url: "/multi-ai",
+    title: "VibeyBot Diagnostic",
+    url: "/vibey-diagnostic",
     icon: Bot,
     isHighlight: true,
   },

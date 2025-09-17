@@ -20,7 +20,7 @@ interface DataPoint {
   impact: number;
 }
 
-// Real reasoning data will be populated from AI analysis
+// Real reasoning data will be populated from VibeyBot analysis
 const emptyReasoningSteps: ReasoningStep[] = [];
 const emptyDataPoints: DataPoint[] = [];
 
@@ -33,7 +33,7 @@ const getRelevanceColor = (relevance: string) => {
   }
 };
 
-export default function AIExplainability() {
+export default function VibeyExplainability() {
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([1]));
   const [showDataMapping, setShowDataMapping] = useState(false);
 
@@ -57,15 +57,15 @@ export default function AIExplainability() {
 
   return (
     <div className="space-y-6">
-      {/* AI Reasoning Process */}
+      {/* VibeyBot Reasoning Process */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Brain className="h-5 w-5 text-primary" />
-            AI Reasoning Process
+            VibeyBot Reasoning Process
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Transparent breakdown of how the AI reached its diagnostic conclusions
+            Transparent breakdown of how VibeyBot reached its diagnostic conclusions
           </p>
         </CardHeader>
         <CardContent>
@@ -75,7 +75,7 @@ export default function AIExplainability() {
                 <div className="text-center">
                   <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
                   <p>No reasoning analysis available</p>
-                  <p className="text-sm mt-1">AI reasoning steps will appear here after analysis</p>
+                  <p className="text-sm mt-1">VibeyBot reasoning steps will appear here after analysis</p>
                 </div>
               </div>
             ) : (
@@ -225,13 +225,13 @@ export default function AIExplainability() {
             <div className="p-3 rounded-md bg-muted/50">
               <p className="text-sm font-medium">Model Validation</p>
               <p className="text-xs text-muted-foreground mt-1">
-                This AI model has been trained on validated medical datasets and cross-referenced with clinical guidelines.
+                This VibeyBot system has been trained on validated medical datasets and cross-referenced with clinical guidelines.
               </p>
             </div>
             <div className="p-3 rounded-md bg-muted/50">
               <p className="text-sm font-medium">Human Oversight Required</p>
               <p className="text-xs text-muted-foreground mt-1">
-                All AI recommendations must be reviewed and validated by qualified medical professionals before clinical implementation.
+                All VibeyBot recommendations must be reviewed and validated by qualified medical professionals before clinical implementation.
               </p>
             </div>
             <div className="p-3 rounded-md bg-muted/50">
