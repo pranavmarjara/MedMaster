@@ -1,0 +1,53 @@
+I need a complete, minute, and structured audit of this project. 
+Do not summarize vaguely — I want every detail mapped.
+
+Please provide:
+
+1. **File & Directory Structure**
+   - List every file and folder.
+   - Explain the purpose of each file.
+   - Note which files are currently active vs unused.
+
+2. **Backend Details**
+   - Which framework is being used (Flask, FastAPI, Express, etc.)?
+   - Where is the backend entry point?
+   - What routes/endpoints exist, and what they currently return?
+   - Which files handle logic for “AI” or data processing?
+   - Where external libraries or APIs are being called (e.g., OpenAI, Gemini, HuggingFace, LangChain)?
+
+3. **Frontend Details**
+   - Confirm it’s React + TypeScript, and which file is the main entry point.
+   - Which components exist and their role (UI input, displaying results, etc.).
+   - How the frontend communicates with the backend (REST calls, WebSockets, etc.).
+
+4. **AI / Analysis Logic**
+   - Identify *every reference* to AI models, APIs, or libraries (imports, configs, keys).
+   - Show where inputs are sent for analysis and where results are returned.
+   - Describe how data flows from user → backend → AI → frontend.
+   - Tell me if there’s any placeholder or dead code that looks unused.
+
+5. **Desired Workflow Comparison**
+   - Compare the current setup to what I describe:
+     - I want to remove all “so called AI” logic (no API calls, no external models).
+     - I want to replace it with a JSON-driven ruleset that acts as the “brain.”
+     - The assistant should feel like a responsive “Active AI Assistant” but is fully deterministic.
+   - Tell me exactly where in the codebase we should plug in this new JSON “brain” logic.
+
+6. **AI Identity**
+   - Find if I gave this assistant a name in the repo (e.g., MedMaster, etc.).
+   - List every place this name appears (UI, backend, docs).
+   - Suggest if we should keep the branding consistent or adjust it.
+
+7. **Dependencies**
+   - List everything in `requirements.txt`, `package.json`, or elsewhere.
+   - Mark which dependencies are AI-related and can be safely removed.
+
+8. **Improvement Suggestions**
+   - Based on the above, tell me:
+     - Which files can be cleaned or deleted.
+     - Where to insert the new JSON loader.
+     - Any code smells or inefficiencies.
+     - Any naming issues that could confuse integration.
+
+⚠️ Important: Be extremely detailed. 
+I don’t just want a summary, I want a **blueprint** of the entire repo and a step-by-step recommendation of how to rip out the old AI and slot in my JSON rulebook as the new “brain.”
