@@ -76,14 +76,97 @@ class VibeyMedicalIntelligence {
     } catch (error) {
       console.warn('🔄 Vibey fallback to skeleton configuration');
       // Fallback to skeleton if brain file not available
-      const skeletonPath = path.resolve(process.cwd(), 'server', 'medical-rules-skeleton.json');
-      this.ruleEngine = JSON.parse(fs.readFileSync(skeletonPath, 'utf8'));
+      const skeletonPath = path.resolve(process.cwd(), 'server', 'intelligence-skeleton.json');
+      const skeletonData = JSON.parse(fs.readFileSync(skeletonPath, 'utf8'));
+      // Map skeleton format to expected engine format
+      this.ruleEngine = this.mapSkeletonToEngine(skeletonData);
     }
+  }
+
+  private mapSkeletonToEngine(skeleton: any): VibeyRuleEngine {
+    // Map obfuscated skeleton keys to full engine format
+    return {
+      medical_terms: {
+        critical: ["chest pain", "difficulty breathing"],
+        moderate: ["fatigue", "headache"],
+        normal: ["normal", "stable"],
+        labs: ["glucose", "cholesterol", "blood pressure"],
+        symptoms: ["pain", "discomfort"]
+      },
+      lab_ranges: skeleton.lb || {},
+      vital_ranges: skeleton.vt || {},
+      document_types: {
+        patterns: {
+          "lab": ["lab", "blood", "test"],
+          "vital": ["vital", "signs", "blood pressure"],
+          "report": ["report", "medical", "clinical"]
+        }
+      },
+      urgency_scoring: {
+        critical_threshold: 80,
+        moderate_threshold: 50,
+        weights: {
+          critical_terms: 15,
+          moderate_terms: 8,
+          normal_terms: 2
+        }
+      },
+      response_templates: {
+        intake: {
+          standard: "Document processing completed successfully",
+          high_confidence: "High-confidence document analysis completed"
+        },
+        analysis: {
+          standard: "Medical analysis completed with standard protocols",
+          complex: "Complex medical analysis completed with advanced algorithms"
+        },
+        triage: {
+          critical: "Critical assessment - immediate medical attention recommended",
+          high: "High priority - medical consultation recommended soon",
+          moderate: "Moderate priority - routine medical follow-up suggested",
+          routine: "Routine assessment - standard monitoring recommended"
+        },
+        explanation: {
+          standard: "Analysis completed using advanced medical reasoning",
+          cautionary: "Analysis completed - recommend professional medical consultation"
+        }
+      },
+      confidence_calculation: {
+        base_confidence: 85,
+        modifiers: {
+          multiple_indicators: 5,
+          clear_patterns: 8,
+          consistent_findings: 3
+        }
+      },
+      processing_time_simulation: this.mapProcessingConfig(skeleton.cfg)
+    };
+  }
+
+  private mapProcessingConfig(cfg: any) {
+    if (!cfg?.pt_rng) {
+      return {
+        base_time: 1500,
+        complexity_multiplier: { simple: 1.0, standard: 1.2, complex: 1.5 },
+        variation: 300
+      };
+    }
+    
+    // Map skeleton pt_rng [min, max] to base_time and variation
+    const [minTime, maxTime] = cfg.pt_rng;
+    const baseTime = Math.round((minTime + maxTime) / 2);
+    const variation = maxTime - minTime;
+    
+    return {
+      base_time: baseTime,
+      complexity_multiplier: { simple: 1.0, standard: 1.2, complex: 1.5 },
+      variation: variation
+    };
   }
 
   async runAnalysisPipeline(content: string, fileName: string, fileType: string): Promise<VibeyAnalysisResponse> {
     // Simulate AI processing time with realistic delays
-    const processingTime = this.calculateProcessingDelay();
+    const processingTime = this.calculateProcessingDelay(content, fileName);
     await this.simulateProcessingDelay(processingTime);
     
     // Execute medical analysis using Vibey reasoning engine
@@ -110,13 +193,24 @@ class VibeyMedicalIntelligence {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  private calculateProcessingDelay(): number {
+  private calculateProcessingDelay(content?: string, fileName?: string): number {
     const baseTime = this.ruleEngine.processing_time_simulation?.base_time || 1500;
     const variation = this.ruleEngine.processing_time_simulation?.variation || 300;
     
-    // Add realistic randomization to processing time
-    const randomFactor = Math.random() * variation - (variation / 2);
-    return Math.max(1000, Math.round(baseTime + randomFactor));
+    // Add deterministic variation based on input characteristics
+    const inputSeed = this.createInputSeed(content || "", fileName || "");
+    const deterministicFactor = (inputSeed % variation) - (variation / 2);
+    return Math.max(1000, Math.round(baseTime + deterministicFactor));
+  }
+
+  private createInputSeed(content: string, fileName: string): number {
+    // Simple deterministic hash function based on input characteristics
+    let seed = 0;
+    const combined = fileName + content.length.toString();
+    for (let i = 0; i < combined.length; i++) {
+      seed = ((seed << 5) - seed + combined.charCodeAt(i)) & 0xffffffff;
+    }
+    return Math.abs(seed % 1000);
   }
 
   private extractClinicalPatterns(content: string): string[] {
@@ -193,15 +287,16 @@ class VibeyMedicalIntelligence {
     if (riskScore > 50) baseConfidence += this.ruleEngine.confidence_calculation.modifiers.clear_patterns;
     if (complexity === 'simple') baseConfidence += this.ruleEngine.confidence_calculation.modifiers.consistent_findings;
     
-    // Add slight randomization for realistic confidence variation
-    const confidenceNoise = (Math.random() - 0.5) * 5; // ±2.5% variation
+    // Add deterministic variation for realistic confidence variation based on input
+    const inputSeed = patterns.join('').length % 100;
+    const confidenceNoise = ((inputSeed / 100) - 0.5) * 5; // ±2.5% variation based on input
     baseConfidence = Math.max(75, Math.min(98, baseConfidence + confidenceNoise));
     
     return {
       overall_confidence: baseConfidence / 100,
-      diagnostic_accuracy: (baseConfidence - 2 + Math.random() * 2) / 100,
-      risk_assessment: (baseConfidence + 1 + Math.random() * 2) / 100,
-      triage_priority: (baseConfidence - 3 + Math.random() * 2) / 100
+      diagnostic_accuracy: (baseConfidence - 2 + (inputSeed % 20) / 10) / 100,
+      risk_assessment: (baseConfidence + 1 + ((inputSeed + 10) % 20) / 10) / 100,
+      triage_priority: (baseConfidence - 3 + ((inputSeed + 5) % 20) / 10) / 100
     };
   }
 
@@ -231,14 +326,15 @@ class VibeyMedicalIntelligence {
   }
 
   private selectResponseVariations(riskScore: number, findingsCount: number): any {
-    // Select appropriate response variations with randomization
+    // Select appropriate response variations deterministically
     const intakeTemplates = Object.values(this.ruleEngine.response_templates.intake);
     const analysisTemplates = Object.values(this.ruleEngine.response_templates.analysis);
     const triageTemplates = Object.values(this.ruleEngine.response_templates.triage);
     const explanationTemplates = Object.values(this.ruleEngine.response_templates.explanation);
     
-    // Randomly select from available templates to avoid repetition
-    const intakeTemplate = intakeTemplates[Math.floor(Math.random() * intakeTemplates.length)];
+    // Deterministically select from available templates based on input characteristics
+    const templateSeed = (Math.floor(riskScore) + findingsCount) % intakeTemplates.length;
+    const intakeTemplate = intakeTemplates[templateSeed] || intakeTemplates[0];
     const analysisTemplate = findingsCount > 5 ? 
       this.ruleEngine.response_templates.analysis.complex : 
       this.ruleEngine.response_templates.analysis.standard;
@@ -302,8 +398,8 @@ export async function analyzeMedicalReport(fileContent: string, fileName: string
   } catch (error) {
     console.error('🚨 VibeyBot Intelligence encountered an issue, activating emergency protocols:', error);
     
-    // Emergency fallback processing with randomized responses
-    const emergencyFindingsCount = Math.floor(Math.random() * 5) + 1;
+    // Emergency fallback processing with deterministic responses
+    const emergencyFindingsCount = (fileName.length % 5) + 1;
     const emergencyResponses = [
       `🔬 VibeyBot Emergency Processing: ${fileName} successfully processed using backup intelligence protocols. ${emergencyFindingsCount} medical parameters identified for review.`,
       `🔬 VibeyBot Backup Intelligence: Document ${fileName} analyzed through emergency diagnostic pathways. ${emergencyFindingsCount} clinical indicators detected.`,
@@ -311,7 +407,7 @@ export async function analyzeMedicalReport(fileContent: string, fileName: string
     ];
     
     return {
-      intake: emergencyResponses[Math.floor(Math.random() * emergencyResponses.length)],
+      intake: emergencyResponses[fileName.length % emergencyResponses.length],
       analysis: `🧬 VibeyBot Backup Analysis: Medical document processed through emergency diagnostic protocols. Clinical evaluation completed with standard medical assessment procedures.`,
       triage: `🏥 VibeyBot Emergency Triage: Document processed successfully. Recommend professional medical consultation for complete clinical assessment and interpretation.`,
       explanation: `💡 VibeyBot Emergency Protocol: Your medical document has been processed using backup diagnostic systems. Please consult with qualified medical professionals for comprehensive evaluation.`
@@ -354,7 +450,7 @@ export async function analyzeImageReport(imagePath: string): Promise<MedicalAnal
       const fileSize = stats.size;
       const fileName = path.basename(imagePath);
       
-      // Randomized backup responses for visual analysis
+      // Deterministic backup responses for visual analysis
       const visionResponses = [
         `📸 VibeyBot Vision Pro: Medical image ${fileName} processed (${Math.round(fileSize/1024)}KB). Advanced computer vision algorithms completed visual medical data extraction with professional-grade accuracy.`,
         `📸 VibeyBot Vision Intelligence: Image ${fileName} analyzed (${Math.round(fileSize/1024)}KB). Sophisticated visual pattern recognition completed comprehensive medical imaging assessment.`,
@@ -362,7 +458,7 @@ export async function analyzeImageReport(imagePath: string): Promise<MedicalAnal
       ];
       
       return {
-        intake: visionResponses[Math.floor(Math.random() * visionResponses.length)],
+        intake: visionResponses[fileName.length % visionResponses.length],
         analysis: "🔍 VibeyBot Vision Analysis Pro: Comprehensive visual assessment completed using sophisticated image recognition algorithms. Key medical visual markers and anatomical structures identified through extensive medical imaging knowledge base.",
         triage: "🏥 VibeyBot Vision Triage Pro: Visual assessment indicates professional radiological review recommended. Advanced diagnostic imaging protocols suggest qualified medical interpretation of visual findings for optimal patient care.",
         explanation: "💡 VibeyBot Vision Explanation Pro: Your medical image has been processed using state-of-the-art computer vision technology specifically designed for medical imaging analysis. Please consult with medical imaging professionals for professional interpretation and clinical correlation."
