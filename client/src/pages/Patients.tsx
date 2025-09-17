@@ -4,11 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export default function Patients() {
-  const recentPatients = [
-    { id: 1, name: "John Smith", lastVisit: "2024-01-15", status: "Active" },
-    { id: 2, name: "Sarah Johnson", lastVisit: "2024-01-14", status: "Follow-up" },
-    { id: 3, name: "Michael Brown", lastVisit: "2024-01-12", status: "Completed" },
-  ];
+  const recentPatients: any[] = [];
 
   return (
     <div className="space-y-6">
@@ -42,9 +38,9 @@ export default function Patients() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">247</div>
+            <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              +12 from last month
+              No patients registered yet
             </p>
           </CardContent>
         </Card>
@@ -57,9 +53,9 @@ export default function Patients() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">89</div>
+            <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              Requiring follow-up
+              No active cases
             </p>
           </CardContent>
         </Card>
@@ -73,20 +69,12 @@ export default function Patients() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {recentPatients.map((patient) => (
-              <div key={patient.id} className="flex items-center justify-between border-b pb-2">
-                <div>
-                  <p className="font-medium">{patient.name}</p>
-                  <p className="text-sm text-muted-foreground">Last visit: {patient.lastVisit}</p>
-                </div>
-                <div className="text-sm">
-                  <span className="px-2 py-1 rounded-full bg-primary/10 text-primary">
-                    {patient.status}
-                  </span>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-center h-32 text-muted-foreground">
+            <div className="text-center">
+              <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <p>No recent patients</p>
+              <p className="text-sm mt-1">Patient records will appear here after registration</p>
+            </div>
           </div>
         </CardContent>
       </Card>

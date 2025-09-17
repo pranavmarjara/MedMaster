@@ -15,36 +15,8 @@ interface MedicalAlert {
   action?: string;
 }
 
-//TODO: remove mock functionality - replace with real API data
-const mockAlerts: MedicalAlert[] = [
-  {
-    id: "1",
-    type: "critical",
-    title: "Potential Sepsis Risk",
-    description: "Patient shows signs of systemic infection with elevated temperature (101.2°F) and increased heart rate. Immediate evaluation required.",
-    timestamp: "2 min ago",
-    acknowledged: false,
-    action: "Initiate sepsis protocol"
-  },
-  {
-    id: "2",
-    type: "warning",
-    title: "Antibiotic Allergy Alert",
-    description: "Patient history indicates penicillin allergy. Consider alternative antibiotics if treatment required.",
-    timestamp: "5 min ago",
-    acknowledged: false,
-    action: "Review medication alternatives"
-  },
-  {
-    id: "3",
-    type: "info",
-    title: "Lab Results Available",
-    description: "Complete blood count and chemistry panel results have been uploaded to the patient record.",
-    timestamp: "12 min ago",
-    acknowledged: true,
-    action: "Review lab results"
-  },
-];
+// Real alerts will be generated from AI analysis
+const emptyAlerts: MedicalAlert[] = [];
 
 const getAlertIcon = (type: string) => {
   switch (type) {
@@ -74,7 +46,7 @@ const getBadgeVariant = (type: string) => {
 };
 
 export default function AlertSystem() {
-  const [alerts, setAlerts] = useState(mockAlerts);
+  const [alerts, setAlerts] = useState(emptyAlerts);
 
   const handleAcknowledge = (alertId: string) => {
     setAlerts(prev => 
@@ -134,6 +106,7 @@ export default function AlertSystem() {
               <div className="text-center py-8 text-muted-foreground">
                 <CheckCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>No active alerts</p>
+                <p className="text-sm mt-2">Alerts will appear here from AI analysis</p>
               </div>
             ) : (
               alerts.map((alert) => (

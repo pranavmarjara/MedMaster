@@ -4,37 +4,17 @@ import { Activity, Users, Clock, TrendingUp, Brain, AlertTriangle } from "lucide
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-//TODO: remove mock functionality - replace with real API data
-const mockStats = {
-  totalPatients: 847,
-  activeAlerts: 3,
-  avgProcessingTime: "2.4 min",
-  accuracyRate: "94.2%"
+// Real-time data - will be populated from actual patient analyses
+const emptyStats = {
+  totalPatients: 0,
+  activeAlerts: 0,
+  avgProcessingTime: "--",
+  accuracyRate: "--"
 };
 
-const mockDiagnosticTrends = [
-  { month: "Jan", diagnoses: 156, accuracy: 92 },
-  { month: "Feb", diagnoses: 178, accuracy: 94 },
-  { month: "Mar", diagnoses: 195, accuracy: 96 },
-  { month: "Apr", diagnoses: 203, accuracy: 95 },
-  { month: "May", diagnoses: 187, accuracy: 94 },
-  { month: "Jun", diagnoses: 221, accuracy: 97 },
-];
-
-const mockConditionDistribution = [
-  { name: "Respiratory Infections", value: 35, color: "hsl(var(--chart-1))" },
-  { name: "Cardiovascular", value: 20, color: "hsl(var(--chart-2))" },
-  { name: "Musculoskeletal", value: 18, color: "hsl(var(--chart-3))" },
-  { name: "Gastrointestinal", value: 15, color: "hsl(var(--chart-4))" },
-  { name: "Other", value: 12, color: "hsl(var(--chart-5))" },
-];
-
-const mockRecentActivity = [
-  { id: 1, patient: "Patient #4851", condition: "Acute Bronchitis", confidence: 89, timestamp: "2 min ago", risk: "low" },
-  { id: 2, patient: "Patient #4852", condition: "Hypertensive Crisis", confidence: 94, timestamp: "5 min ago", risk: "high" },
-  { id: 3, patient: "Patient #4853", condition: "Migraine", confidence: 78, timestamp: "8 min ago", risk: "medium" },
-  { id: 4, patient: "Patient #4854", condition: "Gastroenteritis", confidence: 85, timestamp: "12 min ago", risk: "low" },
-];
+const emptyDiagnosticTrends: any[] = [];
+const emptyConditionDistribution: any[] = [];
+const emptyRecentActivity: any[] = [];
 
 const getRiskColor = (risk: string) => {
   switch (risk) {
@@ -68,10 +48,10 @@ export default function MedicalDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="stat-total-patients">
-              {mockStats.totalPatients.toLocaleString()}
+              {emptyStats.totalPatients.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              +12% from last month
+              No analysis performed yet
             </p>
           </CardContent>
         </Card>
@@ -83,10 +63,10 @@ export default function MedicalDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-destructive" data-testid="stat-active-alerts">
-              {mockStats.activeAlerts}
+              {emptyStats.activeAlerts}
             </div>
             <p className="text-xs text-muted-foreground">
-              Requiring immediate attention
+              No active alerts
             </p>
           </CardContent>
         </Card>
@@ -98,10 +78,10 @@ export default function MedicalDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold" data-testid="stat-processing-time">
-              {mockStats.avgProcessingTime}
+              {emptyStats.avgProcessingTime}
             </div>
             <p className="text-xs text-muted-foreground">
-              -8% improvement this week
+              Ready for analysis
             </p>
           </CardContent>
         </Card>
@@ -113,10 +93,10 @@ export default function MedicalDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-chart-3" data-testid="stat-accuracy-rate">
-              {mockStats.accuracyRate}
+              {emptyStats.accuracyRate}
             </div>
             <p className="text-xs text-muted-foreground">
-              Based on clinician feedback
+              Awaiting patient data
             </p>
           </CardContent>
         </Card>
@@ -132,14 +112,13 @@ export default function MedicalDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={mockDiagnosticTrends}>
-                <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Bar dataKey="diagnoses" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+              <div className="text-center">
+                <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No diagnostic data available yet</p>
+                <p className="text-sm mt-2">Start analyzing patient documents to see trends</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -152,36 +131,12 @@ export default function MedicalDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-center">
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={mockConditionDistribution}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={120}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {mockConditionDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="grid grid-cols-1 gap-2 mt-4">
-              {mockConditionDistribution.map((item, index) => (
-                <div key={index} className="flex items-center gap-2 text-sm">
-                  <div 
-                    className="w-3 h-3 rounded-full" 
-                    style={{ backgroundColor: item.color }}
-                  />
-                  <span>{item.name}</span>
-                  <span className="text-muted-foreground ml-auto">{item.value}%</span>
-                </div>
-              ))}
+            <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+              <div className="text-center">
+                <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No condition data available yet</p>
+                <p className="text-sm mt-2">Upload medical documents to see condition distribution</p>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -196,36 +151,12 @@ export default function MedicalDashboard() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {mockRecentActivity.map((activity) => (
-              <div
-                key={activity.id}
-                className="flex items-center justify-between p-3 rounded-md border hover-elevate transition-colors"
-                data-testid={`activity-${activity.id}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div>
-                    <div className="font-medium text-sm">{activity.patient}</div>
-                    <div className="text-sm text-muted-foreground">{activity.condition}</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <div className="text-sm font-medium" data-testid={`confidence-${activity.id}`}>
-                      {activity.confidence}%
-                    </div>
-                    <div className="text-xs text-muted-foreground">{activity.timestamp}</div>
-                  </div>
-                  <Badge 
-                    variant={getRiskBadge(activity.risk)}
-                    className={getRiskColor(activity.risk)}
-                    data-testid={`risk-${activity.id}`}
-                  >
-                    {activity.risk.toUpperCase()}
-                  </Badge>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-center h-32 text-muted-foreground">
+            <div className="text-center">
+              <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <p>No recent activity</p>
+              <p className="text-sm mt-1">Patient analyses will appear here</p>
+            </div>
           </div>
         </CardContent>
       </Card>

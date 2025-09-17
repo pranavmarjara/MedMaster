@@ -13,30 +13,8 @@ interface Diagnosis {
   icd10: string;
 }
 
-//TODO: remove mock functionality - replace with real API data
-const mockDiagnoses: Diagnosis[] = [
-  {
-    condition: "Acute Respiratory Infection",
-    confidence: 87,
-    evidence: ["Fever (101.2°F)", "Persistent cough", "Elevated white blood cell count", "Chest discomfort"],
-    severity: "medium",
-    icd10: "J22"
-  },
-  {
-    condition: "Viral Upper Respiratory Tract Infection",
-    confidence: 72,
-    evidence: ["Runny nose", "Sore throat", "Recent onset of symptoms", "No bacterial markers"],
-    severity: "low",
-    icd10: "J06.9"
-  },
-  {
-    condition: "Pneumonia",
-    confidence: 34,
-    evidence: ["Chest X-ray shows possible infiltrate", "Fever", "Productive cough"],
-    severity: "high",
-    icd10: "J18.9"
-  },
-];
+// Real diagnosis data will be populated from AI analysis
+const emptyDiagnoses: Diagnosis[] = [];
 
 const getSeverityColor = (severity: string) => {
   switch (severity) {
@@ -111,7 +89,16 @@ export default function DiagnosticResults() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockDiagnoses.map((diagnosis, index) => (
+            {emptyDiagnoses.length === 0 ? (
+              <div className="flex items-center justify-center h-32 text-muted-foreground">
+                <div className="text-center">
+                  <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>No diagnosis available</p>
+                  <p className="text-sm mt-1">Upload a medical document to start analysis</p>
+                </div>
+              </div>
+            ) : (
+              emptyDiagnoses.map((diagnosis, index) => (
               <Card
                 key={index}
                 className={`transition-all hover-elevate cursor-pointer ${
@@ -188,7 +175,8 @@ export default function DiagnosticResults() {
                   )}
                 </CardContent>
               </Card>
-            ))}
+              ))
+            )}
           </div>
         </CardContent>
       </Card>

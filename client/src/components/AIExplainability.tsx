@@ -20,39 +20,9 @@ interface DataPoint {
   impact: number;
 }
 
-//TODO: remove mock functionality - replace with real API data
-const mockReasoningSteps: ReasoningStep[] = [
-  {
-    step: 1,
-    description: "Analyzed presenting symptoms and chief complaint",
-    evidence: ["Persistent cough for 3 days", "Fever 101.2°F", "Chest discomfort"],
-    confidence: 92,
-    weight: 35
-  },
-  {
-    step: 2,
-    description: "Evaluated vital signs and physical indicators",
-    evidence: ["Elevated heart rate (95 bpm)", "Normal blood pressure", "Oxygen saturation 97%"],
-    confidence: 85,
-    weight: 25
-  },
-  {
-    step: 3,
-    description: "Correlated symptoms with known medical patterns",
-    evidence: ["Symptom constellation matches respiratory infection", "Fever pattern suggests viral etiology"],
-    confidence: 78,
-    weight: 40
-  }
-];
-
-const mockDataPoints: DataPoint[] = [
-  { category: "Temperature", value: "101.2°F", relevance: "high", impact: 85 },
-  { category: "Heart Rate", value: "95 bpm", relevance: "medium", impact: 60 },
-  { category: "Cough Duration", value: "3 days", relevance: "high", impact: 80 },
-  { category: "Chest Pain", value: "Present", relevance: "medium", impact: 55 },
-  { category: "Age", value: "34 years", relevance: "low", impact: 25 },
-  { category: "Gender", value: "Female", relevance: "low", impact: 15 },
-];
+// Real reasoning data will be populated from AI analysis
+const emptyReasoningSteps: ReasoningStep[] = [];
+const emptyDataPoints: DataPoint[] = [];
 
 const getRelevanceColor = (relevance: string) => {
   switch (relevance) {
@@ -100,7 +70,16 @@ export default function AIExplainability() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockReasoningSteps.map((step) => (
+            {emptyReasoningSteps.length === 0 ? (
+              <div className="flex items-center justify-center h-32 text-muted-foreground">
+                <div className="text-center">
+                  <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>No reasoning analysis available</p>
+                  <p className="text-sm mt-1">AI reasoning steps will appear here after analysis</p>
+                </div>
+              </div>
+            ) : (
+              emptyReasoningSteps.map((step) => (
               <Card key={step.step} className="hover-elevate">
                 <Collapsible
                   open={expandedSteps.has(step.step)}
@@ -159,7 +138,8 @@ export default function AIExplainability() {
                   </CollapsibleContent>
                 </Collapsible>
               </Card>
-            ))}
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
@@ -188,9 +168,18 @@ export default function AIExplainability() {
         {showDataMapping && (
           <CardContent className="animate-fade-in">
             <div className="grid gap-3">
-              {mockDataPoints
-                .sort((a, b) => b.impact - a.impact)
-                .map((dataPoint, index) => (
+              {emptyDataPoints.length === 0 ? (
+                <div className="flex items-center justify-center h-32 text-muted-foreground">
+                  <div className="text-center">
+                    <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <p>No data point analysis available</p>
+                    <p className="text-sm mt-1">Data impact analysis will appear here</p>
+                  </div>
+                </div>
+              ) : (
+                emptyDataPoints
+                  .sort((a, b) => b.impact - a.impact)
+                  .map((dataPoint, index) => (
                 <div
                   key={index}
                   className="flex items-center justify-between p-3 rounded-md border hover-elevate"
@@ -216,7 +205,8 @@ export default function AIExplainability() {
                     </Badge>
                   </div>
                 </div>
-              ))}
+                ))
+              )}
             </div>
           </CardContent>
         )}

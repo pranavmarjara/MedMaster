@@ -10,16 +10,10 @@ interface RiskFactor {
   impact: number;
 }
 
-//TODO: remove mock functionality - replace with real API data
-const mockRiskFactors: RiskFactor[] = [
-  { name: "Cardiovascular Risk", value: "Moderate", severity: "medium", impact: 65 },
-  { name: "Infection Severity", value: "Mild-Moderate", severity: "medium", impact: 58 },
-  { name: "Respiratory Compromise", value: "Low", severity: "low", impact: 25 },
-  { name: "Dehydration Risk", value: "Low", severity: "low", impact: 20 },
-];
-
-const overallRiskScore = 42; // TODO: calculate from actual data
-const riskLevel = overallRiskScore >= 70 ? "high" : overallRiskScore >= 40 ? "medium" : "low";
+// Real risk factors will be calculated from AI analysis
+const emptyRiskFactors: RiskFactor[] = [];
+const overallRiskScore = 0;
+const riskLevel = "low";
 
 const getRiskIcon = (level: string) => {
   switch (level) {
@@ -80,9 +74,7 @@ export default function RiskAssessment() {
               data-testid="progress-overall-risk"
             />
             <div className="text-sm text-muted-foreground text-center">
-              {riskLevel === "high" && "Immediate medical attention recommended"}
-              {riskLevel === "medium" && "Close monitoring and follow-up care advised"}
-              {riskLevel === "low" && "Standard care protocols applicable"}
+              No risk assessment performed yet
             </div>
           </div>
         </CardContent>
@@ -98,7 +90,16 @@ export default function RiskAssessment() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockRiskFactors.map((factor, index) => (
+            {emptyRiskFactors.length === 0 ? (
+              <div className="flex items-center justify-center h-32 text-muted-foreground">
+                <div className="text-center">
+                  <TrendingUp className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>No risk analysis available</p>
+                  <p className="text-sm mt-1">Upload medical documents to assess risk factors</p>
+                </div>
+              </div>
+            ) : (
+              emptyRiskFactors.map((factor, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-3 rounded-md border hover-elevate"
@@ -129,7 +130,8 @@ export default function RiskAssessment() {
                   </Badge>
                 </div>
               </div>
-            ))}
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
